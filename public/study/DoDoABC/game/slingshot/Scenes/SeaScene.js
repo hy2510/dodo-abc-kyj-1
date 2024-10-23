@@ -515,6 +515,8 @@ export default class SeaScene extends Phaser.Scene {
 
   // 결과창
   setReward() {
+    const userMode = ssStudyInfo.user; // STUDENT ("GUEST", "STAFF")
+
     // 모든 거품 제거
     this.destroyAllBubbles();
 

@@ -523,12 +523,16 @@ export default class GhostScene extends Phaser.Scene {
 
   // 결과창
   setReward() {
+    const userMode = ssStudyInfo.user; // STUDENT ("GUEST", "STAFF")
+
     // 모든 유령 제거
     this.destroyAllGhostes();
 
     let order = "";
     // 통과 / 실패에 따른 분기
     if (this.isPass == "success") {
+      const userMode = ssStudyInfo.user; // STUDENT ("GUEST", "STAFF")
+
       // 유저 타입에 따른 분기
       if (userMode == "STUDENT") {
         const stepSaveEbDoDoAbcOnSucc = (object) => {

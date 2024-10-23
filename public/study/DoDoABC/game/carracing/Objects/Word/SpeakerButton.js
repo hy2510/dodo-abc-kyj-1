@@ -1,23 +1,23 @@
 ﻿export default class SpeakerButton extends Phaser.GameObjects.Sprite {
-    constructor(data) {
-        let { scene, x, y } = data;
+  constructor(data) {
+    let { scene, x, y } = data;
 
-        super(scene, x, y, "speaker");
-        this.scene = scene;
+    super(scene, x, y, "speaker");
+    this.scene = scene;
 
-        this.setInteractive({
-            cursor: 'url(../../include/images/cursor_hover.png), pointer'
-        });
+    this.setInteractive({
+      cursor: "url(../../include/images/cursor_hover.png), pointer",
+    });
 
-        this.on("pointerdown", () => {
-            this.scene.quizSoundArr[this.scene.correctCount].play();
-        })
+    this.on("pointerdown", () => {
+      this.scene.quizSoundArr[this.scene.correctCount].play();
+    });
 
-        this.setDepth(3);
-        this.scene.add.existing(this);
-    }
+    this.setDepth(3);
+    this.scene.add.existing(this);
+  }
 
-    static preload(scene) {
-        scene.load.image("speaker", "../../../include/images/speaker01.png");
-    }
+  static preload(scene) {
+    scene.load.image("speaker", "../carracing/Images/Paint/img_speaker.png");
+  }
 }

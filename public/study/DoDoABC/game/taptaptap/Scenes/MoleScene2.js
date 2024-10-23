@@ -355,6 +355,8 @@ export default class MoleScene extends Phaser.Scene {
     let order = "";
     // 통과 / 실패에 따른 분기
     if (this.isPass == "success") {
+      const userMode = ssStudyInfo.user; // STUDENT ("GUEST", "STAFF")
+
       // 유저 타입에 따른 분기
       if (userMode == "STUDENT") {
         const stepSaveEbDoDoAbcOnSucc = (object) => {

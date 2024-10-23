@@ -41,6 +41,8 @@ export default class RewardBoard extends Phaser.GameObjects.Container {
 
     // 버튼 [
     if (isPass == "success") {
+      const userMode = ssStudyInfo.user; // STUDENT ("GUEST", "STAFF")
+
       // 통과
       bgRewardBoard = new Phaser.GameObjects.Sprite(
         scene,

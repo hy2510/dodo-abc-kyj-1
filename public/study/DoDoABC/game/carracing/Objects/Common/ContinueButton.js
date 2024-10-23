@@ -1,58 +1,69 @@
 ﻿export default class ContinueButton extends Phaser.GameObjects.Sprite {
-    constructor(data) {
-        let { scene, x, y } = data;
+  constructor(data) {
+    let { scene, x, y } = data;
 
-        super(scene, x, y, "btnContinue");
-        this.scene = scene;
+    super(scene, x, y, "btnContinue");
+    this.scene = scene;
 
-        this.setOrigin(0);
+    this.setOrigin(0);
 
-        this.setInteractive({
-            cursor: 'url(../../include/images/cursor_hover.png), pointer'
-        });
+    this.setInteractive({
+      cursor: "url(../../include/images/cursor_hover.png), pointer",
+    });
 
-        this.once("pointerdown", () => {
-            const getNextRoundSucc = data => {
-                try {
-                    const nextRoundData = data;
-                    const errorNo = nextRoundData.ErrorNo;
-                    const studyId = nextRoundData.StudyId;
-                    const studentHistoryId = nextRoundData.StudentHistoryId;
-                    const bookCode = nextRoundData.BookCode;
+    this.once("pointerdown", () => {
+      const getNextRoundSucc = (data) => {
+        try {
+          const nextRoundData = data;
 
-                    if (errorNo == 0) {
-                        const url = $.session.get('url');       // 사이트 주소
-                        const user = $.session.get('user');     // STUDENT ("GUEST", "STAFF")
-                        const mode = $.session.get('mode');     // STUDY ("REVIEW")
-                        const book = bookCode.substring(6, 9);  // 도서 번호
-                        const server = $.session.set('server'); // 'dev' - 개발서버 or
+          const errorNo = nextRoundData.ErrorNo;
+          const studyId = nextRoundData.StudyId;
+          const studentHistoryId = nextRoundData.StudentHistoryId;
+          const bookCode = nextRoundData.BookCode;
 
-                        window.location.href = `../../Default.html?info=${studyId}|${studentHistoryId}|${url}|${user}|${mode}|${book}|${server}`;
-                    }
-                    else {
-                        throw new Error(errorNo);
-                    }
-                }
-                catch (e) {
-                    alert(`Reading Gate에 문의해주세요. error : ${e}`);
+          const obj = {
+            stdid: studyId,
+            sthid: studentHistoryId,
+            url: "",
+            user: "STUDENT",
+            mode: "STUDY",
+            book: `${Number(ssStudyInfo.book) + 1}`,
+            server: "dev",
+          };
 
-                    doLogout();
-                }
-            }
+          updateREF(obj, REF.LevelName);
 
-            const getNextRoundFail = () => {
-                alert(`Reading Gate에 문의해주세요.`);
+          if (errorNo == 0) {
+            const url = $.session.get("url"); // 사이트 주소
+            const user = $.session.get("user"); // STUDENT ("GUEST", "STAFF")
+            const mode = $.session.get("mode"); // STUDY ("REVIEW")
+            const book = bookCode.substring(6, 9); // 도서 번호
+            const server = $.session.set("server"); // 'dev' - 개발서버 or
 
-                doLogout();
-            }
+            window.location.href = `../../Default.html?info=${studyId}|${studentHistoryId}|${url}|${user}|${mode}|${book}|${server}`;
+          } else {
+            throw new Error(errorNo);
+          }
+        } catch (e) {
+          alert(`Reading Gate에 문의해주세요. error : ${e}`);
 
-            getNextRoundDodoABC(getNextRoundSucc, getNextRoundFail);
-        })
+          doLogout();
+        }
+      };
 
-        this.scene.add.existing(this);                              // 오브젝트 생성.
-    }
+      const getNextRoundFail = () => {
+        alert(`Reading Gate에 문의해주세요.`);
 
-    static preload(scene) {
-        scene.load.image("btnContinue", "./images/Common/img_btn_continue.png");
-    }
+        doLogout();
+      };
+
+      getNextRoundDodoABC(getNextRoundSucc, getNextRoundFail);
+    });
+
+    this.scene.add.existing(this); // 오브젝트 생성.
+  }
+
+  static preload(scene) {
+    scene.load.image("btnContinue", "./images/Common/img_btn_continue.png");
+  }
 }
