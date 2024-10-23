@@ -289,6 +289,29 @@ const doCharacterJump = (index, isCorrect) => {
     playEffect1(sndWhoosh);
 
     $(".js-active-character").on("animationend", () => { afterCharacterJumped(index, isCorrect) });
+
+    if (isCorrect) {
+        setTimeout(() => {
+            if (caseType != "both") {
+                playEffect1(sndSailing);
+                playEffect2(sndCorrectBoing);
+                $(".js-wrapper-question-boat").eq(index).addClass("correct");
+            }
+        }, 1500);
+    
+        if (caseType == "both") {
+            setTimeout(() => {
+                playEffect1(sndCorrectBoing);
+                playSound(sndClinkingCoins, dodomodalFinish);
+            }, 1500);
+        }
+    } 
+    if (!isCorrect) {
+        setTimeout(() => {
+            playEffect1(sndIncorrectBoing);
+            playEffect1(sndSplash);
+        }, 1400);
+    }
 }
 
 // 캐릭터 점프 후
@@ -318,35 +341,43 @@ const doCorrectAction = index => {
 
     $(".js-boat-cover").css("opacity", "0.001");
 
-    setTimeout(() => {
-        if (caseType != "both") {
-            playEffect1(sndSailing);
-            playEffect2(sndCorrectBoing);
-            $(".js-wrapper-question-boat").eq(index).addClass("correct");
-        }
-    }, 1500);
-
     playLetter2();
 
-    if (caseType == "both") {
-        setTimeout(() => {
-            playEffect1(sndCorrectBoing);
-            playSound(sndClinkingCoins, dodomodalFinish);
-        }, 1500);
-    }
+    // setTimeout(() => {
+    //     if (caseType != "both") {
+    //         playEffect1(sndSailing);
+    //         playEffect2(sndCorrectBoing);
+    //         $(".js-wrapper-question-boat").eq(index).addClass("correct");
+    //     }
+    // }, 1500);
+
+    // playLetter2();
+
+    // if (caseType == "both") {
+    //     setTimeout(() => {
+    //         playEffect1(sndCorrectBoing);
+    //         playSound(sndClinkingCoins, dodomodalFinish);
+    //     }, 1500);
+    // }
 }
 
 const doIncorrectAction = index => {
     $(".js-wrapper-question-boat").eq(index).removeClass("success");
     $(".js-wrapper-question-boat").eq(index).addClass("incorrect");
 
-    playEffect1(sndIncorrectBoing);
+    // playEffect1(sndIncorrectBoing);
 
+    // setTimeout(() => {
+    //     $(".js-wrapper-question-boat").removeClass("incorrect");
+    //     resetAll(false);
+
+    //     playEffect1(sndSplash);
+    //     playLetter();
+    // }, 1500);
+    
     setTimeout(() => {
         $(".js-wrapper-question-boat").removeClass("incorrect");
         resetAll(false);
-
-        playEffect1(sndSplash);
         playLetter();
     }, 1500);
 }

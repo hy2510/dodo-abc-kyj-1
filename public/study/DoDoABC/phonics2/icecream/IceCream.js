@@ -251,9 +251,15 @@ const correctAction = (pSnd, pImg, pIdx) => {
         playBlanc();
     }
 
-    setTimeout(() => {
-        playWord(true);
-    }, 1000);
+    if (isSafari()) {
+        setTimeout(() => {
+            playWord(true);
+        }, 500);
+    } else {
+        setTimeout(() => {
+            playWord(true);
+        }, 1000);
+    }
 }
 
 const fillSignboard = () => {

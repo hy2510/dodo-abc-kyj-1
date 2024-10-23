@@ -415,6 +415,11 @@
     width: 510px;
 }
 
+.btns.center {
+    justify-content: center;
+    align-items: center;
+}
+
     .btns div {
         width: 88px;
         height: 88px;

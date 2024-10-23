@@ -132,19 +132,37 @@ const setExample = () => {
             $(".js-text-alphabet").eq(index).addClass("small" + data.toLowerCase());  // 알파벳 위치 보정
         })
 
-        //setTimeout(() => {
-        //    playWord();
-        //}, 1000);
-
-        if (correctCount > 0) {
-            dodomodalNext(playNextSound);
+        if (isSafari()) {
+            if (correctCount > 0) {
+                dodomodalNext(playNextSound);
+            } else {
+                playNextSound();
+            }
         } else {
-            setTimeout(() => {
-                playSound(quizData.Sound1, function () {
-                    isWorking = false; isClick = false; lockScreen(false);
-                });
-            }, 1000);
+            playNextSound();
         }
+
+        // if (isSafari()) {
+        //     if (correctCount > 0) {
+        //         dodomodalNext(playNextSound);
+        //     } else {
+        //         setTimeout(() => {
+        //             playSound(quizData.Sound1, function () {
+        //                 isWorking = false; isClick = false; lockScreen(false);
+        //             });
+        //         }, 1000);
+        //     }
+        // } else {
+        //     // setTimeout(() => {
+        //     //    playWord();
+        //     // }, 1000);
+        //     playSound(quizData.Sound1, function () {
+        //         isWorking = false; isClick = false; lockScreen(false);
+        //     });
+        // }
+
+
+        
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -210,10 +228,18 @@ const afterPaperMove = () => {
         $(".wrapper-word").children().remove();
         $(".wrapper-word").append("<span class='text-example'>" + quizData.Example1 + "</span><span class='js-text-example text-example correct'>" + quizData.Question.replace('_', '') + "</span>");
 
-        playSound(sndCorrect, function () {
+        // playSound(sndCorrect, function () {
+        //     $(".js-question").addClass("bigger");
+        //     playSound(quizData.Sound1, openPaper);
+        // });
+
+        // playEffect1(sndCorrect);
+
+        setTimeout(() => {
+            playEffect1(sndCorrect);
             $(".js-question").addClass("bigger");
             playSound(quizData.Sound1, openPaper);
-        });
+        }, 500)
 
         $(".js-wrapper-flower").removeClass("d-none");
         $(".js-character").addClass("correct");
@@ -227,18 +253,18 @@ const afterPaperMove = () => {
 
         $(".js-character").addClass("incorrect");
         $(".js-paper").addClass("shake");
-        playSound(sndIncorrectBoing, returnPaper);
+        setTimeout(() => {
+            playSound(sndIncorrectBoing, returnPaper);
+        }, 1000)
     }
 }
 
 const returnPaper = () => {
-    setTimeout(() => {
-        $(".js-paper").removeClass("shake");
-        $(".js-paper").removeClass("selected");
-        $(".js-character").removeClass("correct incorrect");
-        isShaking = false;
-        playWord();
-    }, 1000);
+    $(".js-paper").removeClass("shake");
+    $(".js-paper").removeClass("selected");
+    $(".js-character").removeClass("correct incorrect");
+    isShaking = false;
+    playWord();
 }
 
 const openPaper = () => {

@@ -153,13 +153,21 @@ const setExample = () => {
         $(".js-wrapper-examples").empty();
         $(".js-wrapper-examples").append(appendHtml);
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playQuestion);
             } else {
                 playQuestion();
             }
-        }, 500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playQuestion);
+                } else {
+                    playQuestion();
+                }
+            }, 500);
+        }
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -218,6 +226,9 @@ const setClickEvent = () => {
                 if (isCorrect) {
                     $(".js-character-leoni").addClass("correct");
                     approachHome();
+                    if (isSafari()) {
+                        playTimeout(quizData.Sound1, 2000)
+                    };
                 }
                 else {
                     $(".js-character-leoni").addClass("incorrect");
@@ -236,22 +247,33 @@ const afterApproach = () => {
         case 2:
         case 3:
             $('.js-wrapper-example').eq(crntIndex).addClass("bigger");
-            playSound(quizData.Sound1,
-                function () {
-                    $(".js-wrapper-example").remove();
+            if (isSafari()) {
+                $(".js-wrapper-example").remove();
                     $(".js-wrapper-question").children().remove();
                     setupQuiz();
-            });
+            } else {
+                playSound(quizData.Sound1,
+                    function () {
+                        $(".js-wrapper-example").remove();
+                        $(".js-wrapper-question").children().remove();
+                        setupQuiz();
+                });
+            }
             break;
 
         case 4:
             $('.js-wrapper-example').eq(crntIndex).addClass("bigger");
             correctCount++; // "move" 후에 afterApproach() 또 호출되어 단어 읽어주는것 방지
 
-            playSound(quizData.Sound1,
-                function () {
-                    $(".js-wrapper-character").addClass("move");
-                });
+            if (isSafari()) {
+                $(".js-wrapper-character").addClass("move");
+            } else {
+                playSound(quizData.Sound1,
+                    function () {
+                        $(".js-wrapper-character").addClass("move");
+                    });
+            }
+
             break;
     }
 }

@@ -27,7 +27,7 @@ let avgTiming;
 let isPass = false;
 let recordCnt = 0;
 
-const passMark = 40;
+const passMark = 0;
 
 let isQuizWord = true;
 
@@ -219,7 +219,13 @@ const setInit = () => {
     //}
 
     showSpeaker();
-    setQuestion();
+
+    if (isSafari()) {
+        dodomodalNext(setQuestion);
+    }else{
+        setQuestion();
+    }
+    
 }
 
 const setQuestion = () => {
@@ -399,9 +405,15 @@ const correctAction = () => {
     isWorking = false;
     lockScreen(false);
 
-    playSound(audCorrect, () => {
-        $(".wrapper-letter").removeClass("correct");
-    });
+    if (isSafari()) {
+        setTimeout(() => {
+            $(".wrapper-letter").removeClass("correct");
+        }, 2000);
+    } else {
+        playSound(audCorrect, () => {
+            $(".wrapper-letter").removeClass("correct");
+        });    
+    }
 }
 
 const incorrectAction = () => {

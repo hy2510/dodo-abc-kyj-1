@@ -280,12 +280,24 @@ let RECORDER = {
     },
 };
 
+// function getColorClass(score) {
+//     if (score >= 50 && score <= 100) {
+//         return 'green';
+//     } else if (score >= 20 && score < 50) {
+//         return 'orange';
+//     } else if (score >= 0 && score < 20) {
+//         return 'red';
+//     } else {
+//         return '';
+//     }
+// }
+
 function getColorClass(score) {
-    if (score >= 50 && score <= 100) {
+    if (score >= 20 && score <= 100) {
         return 'green';
-    } else if (score >= 20 && score < 50) {
+    } else if (score >= 10 && score < 20) {
         return 'orange';
-    } else if (score >= 0 && score < 20) {
+    } else if (score >= 0 && score < 10) {
         return 'red';
     } else {
         return '';

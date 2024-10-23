@@ -26,7 +26,7 @@ let avgTiming;
 let recordingTime = 0;
 const additionSec = 2.0;    // 사운드 길이가 1초이면 녹음 시간은 2초
 const drawCircleRate = 10;
-const passMark = 40;
+const passMark = 0;
 
 let incorrectCnt = 0;
 let quizLoaded = false; // 첫번째 에드몽 액션 구분
@@ -164,11 +164,16 @@ const setExample = () => {
     currentQuizText = quizDataArr[correctCount].Question;
 
     $(".js-btns").removeClass("d-none");
+    $(".js-btns").addClass("center");
 
     // 문제 음원 재생
-    setTimeout(() => {
+    if (isSafari()) {
         playSentence();
-    }, 1000);
+    } else {
+        setTimeout(() => {
+            playSentence();
+        }, 1000);
+    };
 }
 
 const playSentence = () => {
@@ -227,6 +232,7 @@ const checkScore = (result) => {
 
 // 정답 체크 후
 const correctAction = () => {
+    $(".js-btns").removeClass("center");
     //console.log('correctAction');
     if (audioUrl = "") {
         return false;

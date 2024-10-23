@@ -15,9 +15,9 @@ $(document).ready(() => {
 });
 
 const startStudy = () => {
-    if (isSafari()) {
-        $(".js-speaker").addClass("safari");
-    }
+    // if (isSafari()) {
+    //     $(".js-speaker").addClass("safari");
+    // }
 
     lockScreen(true);
     step = 3;

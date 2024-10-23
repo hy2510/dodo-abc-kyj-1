@@ -137,25 +137,38 @@ const setExample = () => {
 
     $(".js-wrapper-examples").append(appendHtml);
 
-    setTimeout(() => {
+    if (isSafari()) {
         if (correctCount > 0) {
             dodomodalNext(playNextSound);
         } else {
             playNextSound();
         }
-    }, 1000);
+    } else {
+        setTimeout(() => {
+            if (correctCount > 0) {
+                dodomodalNext(playNextSound);
+            } else {
+                playNextSound();
+            }
+        }, 1000);
+    };
+
 }
 
 function playNextSound() {
+    if (isSafari()) {
+        playPronunce();
+    };
+
     setTimeout(() => {
         // again 시 동작하기 위해 timeout 해야함
         $(".js-wrapper-train-inner").addClass("move");
 
-        if (correctCount > 0) {
-            $('.js-speaker').addClass('delay');
-        }
+        // if (correctCount > 0) {
+        //     $('.js-speaker').addClass('delay');
+        // }
     }, 100);
-    
+
     playSound(sndTrainMoving,
         function () {
             setTimeout(() => {

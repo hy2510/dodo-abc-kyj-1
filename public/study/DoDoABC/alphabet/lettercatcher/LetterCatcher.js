@@ -23,9 +23,9 @@ $(document).ready(() => {
 });
 
 const startStudy = () => {
-    if (isSafari()) {
-        $(".js-speaker").addClass("safari");
-    }
+    // if (isSafari()) {
+    //     $(".js-speaker").addClass("safari");
+    // }
 
     lockScreen(true);
     currentActivity = 'A4A';
@@ -127,19 +127,33 @@ const setData = data => {
 const setupQuiz = () => {
     setExample();
     setSelectEvent();
+    if (isSafari()) {
+        playQuestion();
+    }
 
     setTimeout(() => {
         $('.js-ball').removeClass("d-none");
+        
+        if (isSafari()) {
+            setTimeout(() => {
+                isWorking = false;
+                isClick = false;
+                lockScreen(false);
+                $(".control-pannel").removeClass("d-none");
+            }, delaysec);
 
-        setTimeout(() => {
-            playSound(sndAlphabet + quizData.Example1.toLowerCase() + ".mp3",
-                function () {
-                    isWorking = false;
-                    isClick = false;
-                    lockScreen(false);
-                    $(".control-pannel").removeClass("d-none");
-                });
-        }, delaysec);
+        } else {
+            setTimeout(() => {
+                playSound(sndAlphabet + quizData.Example1.toLowerCase() + ".mp3",
+                    function () {
+                        isWorking = false;
+                        isClick = false;
+                        lockScreen(false);
+                        $(".control-pannel").removeClass("d-none");
+                    });
+            }, delaysec);
+        }
+
     }, delaysec);
 
     // 사운드 실패시 문제 풀 수 있도록
@@ -459,4 +473,5 @@ const resetAll = (pStart) => {
 
 const playQuestion = () => {
     playEffect1(quizData.Sound1);
+    lockScreen(false);
 }

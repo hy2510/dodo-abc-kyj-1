@@ -208,8 +208,56 @@
     width: 1280px;
     height: 720px;
     z-index: 997;
-    background-color: deepskyblue;
-    opacity: 0.0;
+}
+
+.screen-lock-ios {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    z-index: 997;
+}
+
+.screen-lock-ios::after {
+    content: '';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000;
+    opacity: 0.5;
+}
+
+.screen-lock-ios::before {
+    width: 100px;
+    height: 100px;
+    content: '';
+    position: absolute;
+    top: 70px;
+    left: 80px;
+    /* right: 0;
+    bottom: 0; */
+    z-index: 1;
+    background-image: url('/study/DoDoABC/include/images/hand_cursor04.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100px;
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 /*포인트만 획득 [[[*/

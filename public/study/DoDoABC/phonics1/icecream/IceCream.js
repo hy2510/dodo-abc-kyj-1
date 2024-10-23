@@ -150,13 +150,22 @@ const setExample = () => {
         // 콘
         $(".js-drop-target").eq(correctCount).removeClass("d-none").addClass("dot");
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playPronunce);
             } else {
                 playPronunce();
             }
-        }, 500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playPronunce);
+                } else {
+                    playPronunce();
+                }
+            }, 500);
+        }
+
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -256,9 +265,15 @@ const correctAction = (pIdx) => {
         playBlanc();
     }
 
-    setTimeout(() => {
-        playWord(true);
-    }, 1000);
+    if (isSafari()) {
+        setTimeout(() => {
+            playWord(true);
+        }, 900)
+    } else {
+        setTimeout(() => {
+            playWord(true);
+        }, 1000);    
+    }
 }
 
 const incorrectAction = (pIdx) => {

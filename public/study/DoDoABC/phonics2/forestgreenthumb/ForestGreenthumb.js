@@ -113,9 +113,9 @@ const setQuestion = () => {
 // 보기 세팅
 const setExample = () => {
     try {
-        if (correctCount > 0) {
-            $('.js-speaker').addClass('delay');
-        }
+        // if (correctCount > 0) {
+        //     $('.js-speaker').addClass('delay');
+        // }
 
         exampleArr = [];
 
@@ -132,13 +132,22 @@ const setExample = () => {
             $(".js-wrapper-pot").eq(i).append("<span>" + exampleArr[i] + "</span>");
         }
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playWord);
             } else {
             playWord();
             }
-        }, 1000);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playWord);
+                } else {
+                playWord();
+                }
+            }, 1000);
+        }
+
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -162,9 +171,22 @@ const setClickEvent = () => {
             let answer = $(".js-wrapper-pot").eq(index).children(0).html();
 
             isCorrect = checkAnswer(answer);
-            isCorrect ? correctPapa() : incorrectPapa();
+            if (isSafari()) {
+                isCorrect ? correctPapaIos() : incorrectPapa();
+            } else {
+                isCorrect ? correctPapa() : incorrectPapa();
+            }
         }
     })
+}
+
+// 사파리식 정답체크
+function correctPapaIos () {
+    playWord();
+    setTimeout(() => {
+        playEffect1(sndBang);
+    }, 900);
+    correctPapa();
 }
 
 // 정답 체크
@@ -175,8 +197,16 @@ const checkAnswer = strAnswer => {
 // 정답 체크 후
 const correctPapa = () => {
     //$(".js-container").addClass("flip");
-    playSound(sndBang, function () { biggerPlant(); });
-    $(".js-character-papa").addClass("correct");
+    if (isSafari()) {
+        $(".js-container").addClass("flip");
+        biggerPlant();
+        setTimeout(() => {
+            $(".js-character-papa").addClass("correct");
+        }, 900)
+    } else {
+        playSound(sndBang, function () { biggerPlant(); });
+        $(".js-character-papa").addClass("correct");
+    }
 }
 
 const incorrectPapa = () => {
@@ -195,10 +225,17 @@ const incorrectPapa = () => {
 
 const afterPapaAction = () => {
     if (isCorrect) {
-        setTimeout(() => {
-            $(".js-card-back").addClass("bigger");
-            playSound(quizData.Sound1, function () { afterCorrectAction(); } );
-        }, 3500);
+        if (isSafari()) {
+            setTimeout(() => {
+                $(".js-card-back").addClass("bigger");
+                afterCorrectAction();
+            }, 1500);
+        } else {
+            setTimeout(() => {
+                $(".js-card-back").addClass("bigger");
+                playSound(quizData.Sound1, function () { afterCorrectAction(); } );
+            }, 3500);
+        };
     }
     else {
         afterIncorrectAction();

@@ -19,9 +19,9 @@ $(document).ready(() => {
 });
 
 const startStudy = () => {
-    if (isSafari()) {
-        $(".js-speaker").addClass("safari");
-    }
+    // if (isSafari()) {
+    //     $(".js-speaker").addClass("safari");
+    // }
 
     lockScreen(true);
     currentActivity = 'A4B';
@@ -79,6 +79,9 @@ const setData = data => {
 
         doLogout();
     }
+    if (isSafari()) {
+        playQuestion();
+    }
 }
 
 // 퀴즈 세팅 시작
@@ -101,17 +104,26 @@ const setupQuiz = () => {
             stopEffect();
         });
 
-    setTimeout(() => {
-        let sndUrl = sndAlphabet + quizData.Example1.toLowerCase() + ".mp3";
-        playSound(sndUrl,
-            function () {
-                playSound(sndUrl, function () {
-                    isWorking = false;
-                    isClick = false;
-                    lockScreen(false);
+    if (isSafari()) {
+        setTimeout(() => {
+            isWorking = false;
+            isClick = false;
+            lockScreen(false);
+        }, delaysec);
+    } else {
+        setTimeout(() => {
+            let sndUrl = sndAlphabet + quizData.Example1.toLowerCase() + ".mp3";
+            playSound(sndUrl,
+                function () {
+                    playSound(sndUrl, function () {
+                        isWorking = false;
+                        isClick = false;
+                        lockScreen(false);
+                    });
                 });
-            });
-    }, delaysec);
+        }, delaysec);
+    }
+
 
     // 사운드 실패시 문제 풀 수 있도록
     setTimeout(() => {
@@ -191,6 +203,12 @@ const setClickEvent = () => {
             isCorrect = checkAnswer(answer);
 
             openCurtain(isCorrect);
+
+            if (isSafari()) {
+                isCorrect ? playEffect1(sndCorrect) : playEffect1(sndIncorrectBoing);
+                playTimeout(quizData.Sound1, 3000);
+            }
+
         }
     });
 }

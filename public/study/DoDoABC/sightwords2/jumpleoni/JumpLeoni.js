@@ -103,14 +103,23 @@ const setQuiz = () => {
 
     $(".js-wrapper-examples").append(appendHtml);
 
-    setTimeout(() => {
+    if (isSafari()) {
         if (quizIndex > 0) {
             dodomodalNext(playNextSound);
         } else {
             playNextSound();
         }
-    }, 500);
-        }
+    } else {
+        setTimeout(() => {
+            if (quizIndex > 0) {
+                dodomodalNext(playNextSound);
+            } else {
+                playNextSound();
+            }
+        }, 500);
+            }
+    }
+
 
 function playNextSound() {
     playSound(quizData.Sound1, setClickEvent);
@@ -130,10 +139,16 @@ const setClickEvent = () => {
             setTimeout(() => {
                 correctAction($(this).index());
             }, 500)
+            if (isSafari()) {
+                playTimeout(quizData.Sound1, 2000);
+            }
         }
         else {
             $(".js-character-leoni").addClass("incorrect");
             playSound(audIncorrect, incorrectAction);
+            if (isSafari()) {
+                playTimeout(quizData.Sound1, 2000);
+            }
         }
     })
 
@@ -156,14 +171,16 @@ const correctAction = correctIndex => {
             $(".js-character-leoni").removeClass("walk happy");
            
             $(`.js-character-leoni`).removeClass("happy").addClass(`jump${correctIndex + 1}`);
-            playSound(audJump, null);
+            // playSound(audJump, null);
+            playEffect1(audJump);
 
             const duration = 1 + 0.2 * correctIndex;
             const timeLine = gsap.timeline();
 
             // 점프 후
             const afterJumpLeoni = () => {
-                playSound(audEnter, null);
+                // playSound(audEnter, null);
+                playEffect1(audEnter);
                 const afterHide = () => {
                     $(".js-character-leoni").removeClass(`jump${correctIndex + 1}`);
 
@@ -198,7 +215,9 @@ const correctAction = correctIndex => {
 
         $(".js-character-leoni").removeClass("walk");
 
-        playSound(quizData.Sound1, null);
+        if (!isSafari()) {
+            playSound(quizData.Sound1, null);
+        }
 
         // 걷기
         $(".js-wrapper-leoni").addClass("walk");
@@ -213,7 +232,9 @@ const correctAction = correctIndex => {
 
 const incorrectAction = () => {
     $(".js-character-leoni").removeClass("incorrect");
-    playSound(quizData.Sound1, null);
+    if (!isSafari()) {
+        playSound(quizData.Sound1, null);
+    }
 
     setTimeout(() => {
         setWorking(false);

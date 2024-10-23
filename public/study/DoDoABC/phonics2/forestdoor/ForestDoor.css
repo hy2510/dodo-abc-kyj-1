@@ -149,6 +149,21 @@
         animation: move3 2.1s linear forwards;
     }
 
+    .wrapper-character.move1ios {
+        transition: 1s;
+        animation: move1 0.5s linear forwards;
+    }
+
+    .wrapper-character.move2ios {
+        transition: 1s;
+        animation: move2 0.7s linear forwards;
+    }
+
+    .wrapper-character.move3ios {
+        transition: 1s;
+        animation: move3 0.9s linear forwards;
+    }
+
 @keyframes move1 {
     to {
         left: 100px;

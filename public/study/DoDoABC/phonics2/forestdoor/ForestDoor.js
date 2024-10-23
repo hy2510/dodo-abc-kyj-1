@@ -108,9 +108,9 @@ const setWord = () => {
 // 예제 세팅
 const setExample = () => {
     try {
-        if (correctCount > 0) {
-            $('.js-speaker').addClass('delay');
-        }
+        // if (correctCount > 0) {
+        //     $('.js-speaker').addClass('delay');
+        // }
 
 
         if (quizData.length < 1) {
@@ -134,13 +134,22 @@ const setExample = () => {
 
         $(".js-wrapper-examples").append(appendHtml);
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playWord);
             } else {
                 playWord();
             }
-        }, 1000);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playWord);
+                } else {
+                    playWord();
+                }
+            }, 1000);
+        }
+
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -181,12 +190,64 @@ const checkAnswer = strAnswer => {
 const roroWalk = index => {
     if (index == 0) {
         playEffect1(sndWalk1);
+        if (isSafari()) {
+            if (isCorrect) {
+                setTimeout(() => {
+                    playEffect1(sndCorrectAfter);
+                    playSound(sndCorrect);
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    playEffect1(sndIncorrectBoingAfter);
+                    playSound(sndIncorrectBoing);
+                }, 500);
+                setTimeout(() => {
+                    playWord();
+                }, 2500);
+            }
+        }
     } else if (index == 1) {
         playEffect1(sndWalk2);
+        if (isSafari()) {
+            if (isCorrect) {
+                setTimeout(() => {
+                    playEffect1(sndCorrectAfter);
+                    playSound(sndCorrect);
+                }, 700);
+            } else {
+                setTimeout(() => {
+                    playEffect1(sndIncorrectBoingAfter);
+                    playSound(sndIncorrectBoing);
+                }, 700);
+                setTimeout(() => {
+                    playWord();
+                }, 2500);
+            }
+        }
     } else {
         playEffect1(sndWalk4);
+        if (isSafari()) {
+            if (isCorrect) {
+                setTimeout(() => {
+                    playEffect1(sndCorrectAfter);
+                    playSound(sndCorrect);
+                }, 900);
+            } else {
+                setTimeout(() => {
+                    playEffect1(sndIncorrectBoingAfter);
+                    playSound(sndIncorrectBoing);
+                }, 900);
+                setTimeout(() => {
+                    playWord();
+                }, 2500);
+            }
+        }
     }
-    $(".js-wrapper-character").addClass("move" + (index + 1));
+    if (isSafari()) {
+        $(".js-wrapper-character").addClass("move" + (index + 1) + 'ios');
+    } else {
+        $(".js-wrapper-character").addClass("move" + (index + 1));
+    }
     $(".js-character-roro").addClass("walk");
 }
 
@@ -205,54 +266,97 @@ const afterRoroAction = () => {
 
         stopEffect();
         $(".js-example").eq(clickIndex).addClass("correct");
-        $(".js-wrapper-character").removeClass("move1 move2 move3");
+        if (isSafari()) {
+            $(".js-wrapper-character").removeClass("move1ios move2ios move3ios");
+        } else {
+            $(".js-wrapper-character").removeClass("move1 move2 move3");
+        }
         $(".js-wrapper-character").addClass("d-none");
 
-        playEffect1(sndCorrectAfter);
-        playSound(sndCorrect);
+        // playEffect1(sndCorrectAfter);
+        // playSound(sndCorrect);
+
+        if (isSafari()) {
+            setTimeout(() => {
+                playSound(quizData.Sound1,
+                    function () {
+                        correctCount++;
+    
+                        if (correctCount < maxCorrectCount) {
+                            setTimeout(() => {
+                                quizData = [];
+                                exampleArr = [];
+                                setInit();
+                                setupQuiz();
+                            }, 1000);
+                        }
+                        else {
+                            dodomodalFinish();
+                        }
+                    });
+                $(".js-wrapper-word").addClass("light");
+                $(".js-wrapper-word span").addClass("light");
+            }, 2500);
+        } else {
+            playEffect1(sndCorrectAfter);
+            playSound(sndCorrect);
+        }
     }
     else {
 
         stopEffect();
         $(".js-example").eq(clickIndex).addClass("incorrect");
-        $(".js-wrapper-character").removeClass("move1 move2 move3");
+        if (isSafari()) {
+            $(".js-wrapper-character").removeClass("move1ios move2ios move3ios");
+        } else {
+            $(".js-wrapper-character").removeClass("move1 move2 move3");
+        }
         $(".js-wrapper-character").addClass("d-none");
 
-        playEffect1(sndIncorrectBoingAfter);
-        playSound(sndIncorrectBoing);
+        // playEffect1(sndIncorrectBoingAfter);
+        // playSound(sndIncorrectBoing);
+
+        if (!isSafari()) {
+            playEffect1(sndCorrectAfter);
+            playSound(sndCorrect);
+        }
     }
 }
 
 const afterDoorOpen = () => {
     if (isCorrect) {
-        setTimeout(() => {
-            playSound(quizData.Sound1,
-                function () {
-                    correctCount++;
-
-                    if (correctCount < maxCorrectCount) {
-                        setTimeout(() => {
-                            quizData = [];
-                            exampleArr = [];
-                            setInit();
-                            setupQuiz();
-                        }, 1000);
-                    }
-                    else {
-                        dodomodalFinish();
-                    }
-                });
-            $(".js-wrapper-word").addClass("light");
-            $(".js-wrapper-word span").addClass("light");
-        }, 1500);
+        if (!isSafari()) {
+            setTimeout(() => {
+                playSound(quizData.Sound1,
+                    function () {
+                        correctCount++;
+    
+                        if (correctCount < maxCorrectCount) {
+                            setTimeout(() => {
+                                quizData = [];
+                                exampleArr = [];
+                                setInit();
+                                setupQuiz();
+                            }, 1000);
+                        }
+                        else {
+                            dodomodalFinish();
+                        }
+                    });
+                $(".js-wrapper-word").addClass("light");
+                $(".js-wrapper-word span").addClass("light");
+            }, 1500);
+        }
     }
     else {
         setTimeout(() => {
-            $('.js-speaker').addClass('delay');
+            // $('.js-speaker').addClass('delay');
             $(".js-example").removeClass("incorrect click");
             $(".js-wrapper-character").removeClass("d-none");
             $(".js-character-roro").removeClass("d-none");
-            playWord();
+            if (!isSafari()) {
+                playWord();
+            }
         }, 1000);
     }
 }

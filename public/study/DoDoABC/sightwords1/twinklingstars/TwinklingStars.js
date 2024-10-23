@@ -111,14 +111,24 @@ const setExample = () => {
             throw "No Question Data";
         }
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playQuestion);
             } else {
                 playQuestion();
                 motionGomaWaiting();
             }
-        }, 1000);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playQuestion);
+                } else {
+                    playQuestion();
+                    motionGomaWaiting();
+                }
+            }, 1000);
+        }
+        
     }
     catch (e) {
         alert("Set Question Error: " + e);
@@ -140,17 +150,27 @@ const checkAnswer = (pNum) => {
 
     if (answer == quizData.Example1) {
         correctAction(pNum);
+        if (isSafari()) {
+            playTimeout(quizData.Sound1, 2000);
+        }
     } else {
         incorrectAction();
     }
 }
 
 const playQuestion = () => {
-    playSound(quizData.Sound1, function () {
+    if (isSafari()) {
+        playEffect1(quizData.Sound1);
         isWorking = false;
         isClick = false;
         lockScreen(isWorking);
-    });
+    } else {
+        playSound(quizData.Sound1, function () {
+            isWorking = false;
+            isClick = false;
+            lockScreen(isWorking);
+        });
+    };
 }
 
 const resetAll = pStart => {

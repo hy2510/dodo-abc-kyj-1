@@ -102,9 +102,9 @@ const setImage = () => {
 // 보기 세팅
 const setExample = () => {
     try {
-        if (correctCount > 0) {
-            $('.js-speaker').addClass('delay');
-        }
+        // if (correctCount > 0) {
+        //     $('.js-speaker').addClass('delay');
+        // }
 
         if (quizData.length < 1) {
             throw "No Example Data";
@@ -130,13 +130,22 @@ const setExample = () => {
             $(".js-example").eq(index).html(data);
         });
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playWord);
             } else {
                 playWord();
             }
-        }, 1000);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playWord);
+                } else {
+                    playWord();
+                }
+            }, 1000);
+        }
+
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -194,8 +203,13 @@ const dodoWalk = (pIndex) => {
         $(".js-dodo").animate({ left: 914 }, 1000,
             function () {
                 $(".js-dodo").removeClass("walk");
-                afterWalk(pIndex);
+                if (!isSafari()) {
+                    afterWalk(pIndex);    
+                }
             });
+            if (isSafari()) {
+                afterWalk(pIndex);
+            }
     }
 }
 
@@ -213,7 +227,15 @@ const afterWalk = (pIndex) => {
 const correctAction = (pIdx) => {
     selectedIdx = pIdx;
     $(".js-dodo").addClass("correct");
-    playSound(sndCorrect, playCorrectAction);
+    
+    if (isSafari()) {
+        setTimeout(() => {
+            playEffect1(sndCorrect);
+            playCorrectAction();    
+        }, 500)
+    } else {
+        playSound(sndCorrect, playCorrectAction);
+    };
 }
 
 const playCorrectAction = () => {
@@ -228,16 +250,39 @@ const incorrectAction = (pIdx) => {
 
     setTimeout(() => {
         $(".js-dodo").addClass("incorrect");
-    }, 1100);
+    }, 500);
 
     $(".js-papa").addClass("incorrect");
     //$(".js-dodo").addClass("incorrect");
-    $(".rain").eq(selectedIdx).removeClass("d-none");
-    playSound(sndIncorrectBoing, playIncorrectAction);
+    if (isSafari()) {
+        if (pIdx == 2) {
+            setTimeout(() => {
+                $(".rain").eq(selectedIdx).removeClass("d-none");
+            }, 1000);
+        } else {
+            $(".rain").eq(selectedIdx).removeClass("d-none");
+        }
+    } else {
+        $(".rain").eq(selectedIdx).removeClass("d-none");
+    }
+    if (isSafari()) {
+        setTimeout(() => {
+            playEffect1(sndIncorrectBoing);
+            playIncorrectAction();
+        }, 500)
+    } else {
+        playSound(sndIncorrectBoing, playIncorrectAction);
+    };
 }
 
 const playIncorrectAction = () => {
-    playSound(sndRaining, playWord);
+    
+    if (isSafari()) {
+        playEffect1(sndRaining);
+        playWord();
+    } else {
+        playSound(sndRaining, playWord);
+    }
 
     setTimeout(() => {
         $(".puddle").eq(selectedIdx).removeClass("d-none");

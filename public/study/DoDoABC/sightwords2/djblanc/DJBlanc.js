@@ -84,7 +84,7 @@ const setQuiz = () => {
     $(".js-wrapper-imgs").append(appendHtml);
 
     if (quizIndex > 0) {
-        $(".js-speaker").addClass("delay");
+        // $(".js-speaker").addClass("delay");
         $(".js-speaker").addClass("locked");
         setClickEvent();
     }
@@ -92,15 +92,25 @@ const setQuiz = () => {
     if (quizIndex > 0) {
         dodomodalNext(playNextSound);
     } else {
-        playNextSound();
+        if (isSafari()) {
+            dodomodalNext(playNextSound);
+        } else {
+            playNextSound();
+        }
     }
 }
 
 function playNextSound() {
-    playSound(quizData.Sound1, () => {
+    if (isSafari()) {
+        playTimeout(quizData.Sound1, 100);
         setClickEvent();
         lockScreen(false);
-    });
+    } else {
+        playSound(quizData.Sound1, () => {
+            setClickEvent();
+            lockScreen(false);
+        });
+    }
 }
 
 const setClickEvent = () => {
@@ -115,9 +125,15 @@ const setClickEvent = () => {
 
         if ($(this)[0].src == quizData.Image1) {
             playSound(audCorrect, correctAction($(this).index()));
+            if (isSafari()) {
+                playTimeout(quizData.Sound1, 2500);
+            }
         }
         else {
             incorrectAction();
+            if (isSafari()) {
+                playTimeout(quizData.Sound1, 2500);
+            }
         }
     })
 
@@ -130,9 +146,13 @@ const correctAction = correctIndex => {
     $(".img-examples").eq(correctIndex).on("transitionend", () => {
         $(".img-examples").eq(correctIndex).off("transitionend");
 
-        playSound(quizData.Sound1, function () {
+        if (isSafari()) {
             setTimeout(loadNext, 1500);
-        });
+        } else {
+            playSound(quizData.Sound1, function () {
+                setTimeout(loadNext, 1500);
+            });
+        }
     })
 
     $(".img-examples").eq(incorrectIndex).on("transitionend", () => {
@@ -150,15 +170,24 @@ const correctAction = correctIndex => {
 const incorrectAction = () => {
     $(".js-blanc-incorrect").addClass("incorrect");
 
-    playSound(audIncorrect, function () {
+    if (isSafari()) {
+        playEffect1(audIncorrect);
         $(".js-blanc-incorrect").removeClass("incorrect");
         $(".img-examples").removeClass("selected");
 
-        playSound(quizData.Sound1, () => {
-            setWorking(false);
-            lockScreen(isWorking);
+        setWorking(false);
+        lockScreen(isWorking);
+    } else {
+        playSound(audIncorrect, function () {
+            $(".js-blanc-incorrect").removeClass("incorrect");
+            $(".img-examples").removeClass("selected");
+    
+            playSound(quizData.Sound1, () => {
+                setWorking(false);
+                lockScreen(isWorking);
+            });
         });
-    });
+    }
 }
 
 const loadNext = () => {

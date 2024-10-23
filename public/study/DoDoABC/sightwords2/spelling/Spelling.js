@@ -233,18 +233,26 @@ const setQuiz = () => {
     $(".js-input-spelling").append(inputHtml);
     $(".js-keyboard").append(keyboardHtml);
 
-    setTimeout(() => {
+    if (isSafari()) {
         if (quizIndex > 0) {
             dodomodalNext(playNextSound);
         } else {
             playNextSound();
         }
-    }, 1000);
+    } else {
+        setTimeout(() => {
+            if (quizIndex > 0) {
+                dodomodalNext(playNextSound);
+            } else {
+                playNextSound();
+            }
+        }, 1000);
+    }
 }
 
 function playNextSound() {
     if (quizIndex > 0) {
-            $(".js-speaker").addClass("delay");
+            // $(".js-speaker").addClass("delay");
             $(".js-speaker").addClass("locked");
             setClickEvent();
         }

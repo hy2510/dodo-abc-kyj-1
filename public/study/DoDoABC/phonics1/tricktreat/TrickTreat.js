@@ -120,14 +120,21 @@ const setExample = () => {
         });
 
         $(".js-wrapper-examples").append(appendHtml);
-
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playWord);
             } else {
                 playWord();
             }
-        }, 500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playWord);
+                } else {
+                    playWord();
+                }
+            }, 500);
+        }
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -185,14 +192,28 @@ const afterDodoAction = () => {
 
     if (isCorrect) {
         $(".js-example").eq(clickIndex).addClass("correct");
-        setTimeout(() => {
-            playSound(sndDoor, playCorrect);
-        }, 1000);
+        if (isSafari()) {
+            setTimeout(() => {
+                playSound(sndDoor, playCorrect);
+                playEffect1(quizData.Sound1);
+                $(".js-wrapper-word").addClass("correct");
+            }, 800);
+        } else {
+            setTimeout(() => {
+                playSound(sndDoor, playCorrect);
+            }, 1000);
+        }
     } else {
         $(".js-example").eq(clickIndex).addClass("incorrect");
-        setTimeout(() => {
-            playSound(sndDoor, playInCorrect);
-        }, 1000);
+        if (isSafari()) {
+            setTimeout(() => {
+                playSound(sndDoor, playInCorrect);
+            }, 500);
+        } else {
+            setTimeout(() => {
+                playSound(sndDoor, playInCorrect);
+            }, 1000);
+        }
     }
 }
 

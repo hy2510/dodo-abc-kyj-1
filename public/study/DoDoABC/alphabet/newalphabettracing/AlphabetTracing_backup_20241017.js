@@ -14,14 +14,18 @@ let dodo, stage, layer, canvas, isDrawing, startPointer, endPointer, paths, empt
     , dotPath, dotPathData
     , isGuide = true, mouseIndex = 2, guideImage, fingerImage, movingTween, createdPath;
 
-$(document).ready(() => {
+// $(document).ready(() => {
+//     dodomodalStart();
+// });
+
+window.addEventListener('load', function() {
     dodomodalStart();
 });
 
 const startStudy = () => {
-    // if (isSafari()) {
-    //     $(".js-speaker").addClass("safari");
-    // }
+    if (isSafari()) {
+        $(".js-speaker").addClass("safari");
+    }
 
     step = 1;
     quizType = "A";
@@ -35,7 +39,9 @@ const startStudy = () => {
 
     // 유저가 staff or review 일 때 메뉴에서 현재 학습 강조.
     $("." + currentActivity).addClass("on");
+
     loadQuizData(step, quizType, setData);
+    
 }
 
 const loadQuiz = () => {
@@ -55,7 +61,7 @@ const setData = data => {
         checkStudyType();
 
         setupQuiz();
-        playBGM(sndBgmA1A);
+        // playBGM(sndBgmA1A);
     }
     catch (e) {
         swal({ text: "Setup Quiz Error: " + e }).then(function () { doLogout(); });
@@ -65,6 +71,8 @@ const setData = data => {
 const setupQuiz = () => {
     bigAlphabetData = alphabetData[quizData.CorrectText.toUpperCase()];
     smallAlphabetData = alphabetData[quizData.CorrectText.toLowerCase()];
+
+    playSound(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${quizData.CorrectText}.mp3`)
 
     // 2-1. 알파벳 이미지 설정
     setCanvas();
@@ -80,14 +88,12 @@ const setCanvas = () => {
     layer = new Konva.Layer();
     stage.add(layer);
 
-    if (isSafari()) {
-        playSound(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${quizData.CorrectText}.mp3`);
-    }
-
     // 알파벳 두개 보여줄때는 나이트 --> 쓰기때는 bg_alphabet_tracing 변경
     setBackgroundImage('bg_alphabet_tracing.png', Konva.Easings.StrongEaseIn, 3, true);
 
     setSetAlphabet("start");
+
+    // playSound(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${quizData.CorrectText}.mp3`)
 }
 
 const setBackgroundImage = (pSrc, pEffect, pDuration, pBool) => {
@@ -140,17 +146,15 @@ const setSetAlphabet = type => {
         if (type == "start") {
             layer.add(setImg);
             setImg.image(imageObj);
-            if (isSafari()) {
-                setTimeout(() => {
-                    setImg.remove();
-                    setEmptyImage();
-                }, 3000);
-            } else {
-                playSound(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${quizData.CorrectText}.mp3`, () => {
-                    setImg.remove();
-                    setEmptyImage();
-                })
-            }
+            console.log('1')
+            setTimeout(() => {
+                setImg.remove();
+                setEmptyImage();
+            }, 1000)
+            // playSound(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${quizData.CorrectText}.mp3`, () => {
+                // setImg.remove();
+                // setEmptyImage();
+            // })
         }
         else if (type == "end") {
             const particle = new Particle();
@@ -206,7 +210,7 @@ const setEmptyImage = () => {
             duration: 1.55,
             opacity: 1,
             onFinish: () => {
-                playSound(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${caseType}${quizData.CorrectText}.mp3`);
+                playEffect1(`https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/letter/${caseType}${quizData.CorrectText}.mp3`);
                 setGuideArrow();
             }
         });
@@ -699,7 +703,7 @@ const resetAll = (pStart) => {
     setCanvas();
 
     hideNext();
-    playBGM(sndBgmA1A);
+    // playBGM(sndBgmA1A);
 }
 
 // 클래스

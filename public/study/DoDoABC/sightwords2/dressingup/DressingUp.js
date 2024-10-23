@@ -132,20 +132,30 @@ const setExamples = () => {
         $(".js-examples")[index].innerHTML = appendHtml;
     })
 
-    $(".js-wrapper-examples").on("animationend", () => {
-        setTimeout(() => {
-            if (quizIndex > 0) {
-                dodomodalNext(playNextSound);
-            } else {
-                playNextSound();
-            }
-        }, 500);
-    })
+    if (isSafari()) {
+        $(".js-wrapper-examples").on("animationend");
+        if (quizIndex > 0) {
+            dodomodalNext(playNextSound);
+        } else {
+            playNextSound();
+        }
+    } else {
+        $(".js-wrapper-examples").on("animationend", () => {
+            setTimeout(() => {
+                if (quizIndex > 0) {
+                    dodomodalNext(playNextSound);
+                } else {
+                    playNextSound();
+                }
+            }, 500);
+        })
+    }
+
 
     setTimeout(() => {
-        if (quizIndex > 0 && isCorrect) {
-            $(".js-speaker").addClass("delay");
-        }
+        // if (quizIndex > 0 && isCorrect) {
+        //     $(".js-speaker").addClass("delay");
+        // }
 
         $(".js-wrapper-examples").addClass("open");
     }, 1000);
@@ -197,14 +207,22 @@ const fireClickEvent = () => {
 const correctAction = () => {
     isCorrect = true;
     $(".js-wrapper-face").addClass("correct");
-    playSound(audCorrect, null);
+    if (isSafari()) {
+        playEffect1(audCorrect);
+    } else {
+        playSound(audCorrect, null);
+    }
     doExampleTwinkle();
 }
 
 const incorrectAction = () => {
     isCorrect = false;
     $(".js-wrapper-face").addClass("incorrect");
-    playSound(audIncorrect, afterIncorrectAction);
+    if (isSafari()) {
+        playEffect1(audIncorrect);
+    } else {
+        playSound(audIncorrect, afterIncorrectAction);
+    }
 }
 
 const afterIncorrectAction = () => {
@@ -251,7 +269,9 @@ const makeDragObject = () => {
     appendHtml += `</div>`;
 
     $(".js-bg-mirror").append(appendHtml);
-    playEffect1(quizDataArr[quizIndex].Sound1);
+    if (!isSafari) {
+        playEffect1(quizDataArr[quizIndex].Sound1);
+    }
 
     setDragEvent();
 }
@@ -279,7 +299,9 @@ const setDragEvent = () => {
         $(".js-drop-dodo").addClass("d-none");
         setWorking(true);
         lockScreen(isWorking);
-        playSound(audDrop, null);
+        if (!isSafari()) {
+            playSound(audDrop, null);
+        }
         afterDropObj();
     });
 

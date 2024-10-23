@@ -77,13 +77,22 @@ const setupQuiz = () => {
         setWord();
         setExample();
         
-        setTimeout(() => {
+        if(isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playWord);
             } else {
                 playWord();
             }
-        }, 1500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playWord);
+                } else {
+                    playWord();
+                }
+            }, 1500);
+        }
+
     }
     catch (e) {
         alert("Setup Quiz Error: " + e);

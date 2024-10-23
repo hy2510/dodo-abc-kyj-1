@@ -15,9 +15,9 @@ $(document).ready(() => {
 });
 
 const startStudy = () => {
-    if (isSafari()) {
-        $(".js-speaker").addClass("safari");
-    }
+    // if (isSafari()) {
+    //     $(".js-speaker").addClass("safari");
+    // }
 
     $(".js-header-right").addClass("d-none");
     currentActivity = 'A3B';

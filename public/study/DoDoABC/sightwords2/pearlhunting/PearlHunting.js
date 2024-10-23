@@ -114,13 +114,22 @@ const setExample = () => {
 
     $(".js-wrapper-examples").append(appendHtml);
 
-    setTimeout(() => {
+    if (isSafari()) {
         if (quizIndex > 0) {
             dodomodalNext(playNextSound);
         } else {
             playNextSound();
         }
-    }, 500);
+    } else {
+        setTimeout(() => {
+            if (quizIndex > 0) {
+                dodomodalNext(playNextSound);
+            } else {
+                playNextSound();
+            }
+        }, 500);
+    }
+
 }
 
 function playNextSound() {

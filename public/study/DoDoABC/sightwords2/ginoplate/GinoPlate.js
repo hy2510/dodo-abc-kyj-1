@@ -117,18 +117,27 @@ const setQuiz = () => {
         $(".js-wrapper-examples").append(appendHtml);
 
         if (quizIndex > 0) {
-            $(".js-speaker").addClass("delay");
+            // $(".js-speaker").addClass("delay");
             $(".js-speaker").addClass("locked");
             setClickEvent();
         }
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (quizIndex > 0) {
                 dodomodalNext(playNextSound);
             } else {
                 playNextSound();
             }
-        }, 1000)
+        } else {
+            setTimeout(() => {
+                if (quizIndex > 0) {
+                    dodomodalNext(playNextSound);
+                } else {
+                    playNextSound();
+                }
+            }, 1000)
+        }
+
     }
     catch (e) {
         alert(`Set Quiz Error: ${e}`);
@@ -138,10 +147,16 @@ const setQuiz = () => {
 }
 
 function playNextSound() {
-    playSound(quizData.Sound1, () => {
+    if (isSafari()) {
+        playEffect1(quizData.Sound1);
         setClickEvent();
         lockScreen(false);
-    });
+    } else {
+        playSound(quizData.Sound1, () => {
+            setClickEvent();
+            lockScreen(false);
+        });
+    }
 }
 
 const setClickEvent = () => {
@@ -187,8 +202,9 @@ const correctAction = correctIndex => {
         $(".js-character-gino").addClass("correct");
         $(".js-foods").eq(quizIndex + 1).addClass("appear");
 
-        setTimeout(() => {
-            playSound(quizData.Sound1, () => {
+        if (isSafari()) {
+            playTimeout(quizData.Sound1, 2500)
+            setTimeout(() => {
                 hideFood();
                 setTimeout(() => {
                     playEffect1(audEating);
@@ -215,8 +231,40 @@ const correctAction = correctIndex => {
                         $(".js-character-gino").addClass("pizza");
                         break;
                 }
-            });
-        }, 1500)
+            }, 1500)
+
+        } else {
+            setTimeout(() => {
+                playSound(quizData.Sound1, () => {
+                    hideFood();
+                    setTimeout(() => {
+                        playEffect1(audEating);
+                    }, 900);               
+    
+                    switch (quizIndex) {
+                        case 0:
+                            $(".js-character-gino").on("animationend", afterGinoAnimationEnd);
+                            $(".js-character-gino").addClass("burger");
+                            break;
+    
+                        case 1:
+                            $(".js-character-gino").on("animationend", afterGinoAnimationEnd);
+                            $(".js-character-gino").addClass("cake");
+                            break;
+    
+                        case 2:
+                            $(".js-character-gino").on("animationend", afterGinoAnimationEnd);
+                            $(".js-character-gino").addClass("donut");
+                            break;
+    
+                        case 3:
+                            $(".js-character-gino").on("animationend", afterGinoAnimationEnd);
+                            $(".js-character-gino").addClass("pizza");
+                            break;
+                    }
+                });
+            }, 1500)
+        }
     }
     const hideFood = () => {
         $(".js-foods").removeClass("appear");

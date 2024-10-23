@@ -144,13 +144,22 @@ const setExample = () => {
 
         $(".js-wrapper-examples").append(appendHtml);
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playQuestion);
             } else {
                 playQuestion();
             }
-        }, 500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playQuestion);
+                } else {
+                    playQuestion();
+                }
+            }, 500);
+        };
+
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -189,6 +198,9 @@ const moveStage = index => {
     selectedIndex = index;
     playEffect1(sndCrandMoving[index]);
     $(".js-wrapper-character").addClass("move" + (index + 1));
+    if (isSafari()) {
+        playMute(quizData.Sound1);
+    };
 }
 
 const afterMoveStage = () => {

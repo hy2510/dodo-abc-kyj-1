@@ -149,13 +149,22 @@ const setExample = () => {
 
         $(".js-wrapper-examples").append(appendHtml);
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playQuestion);
             } else {
                 playQuestion();
             }
-        }, 500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playQuestion);
+                } else {
+                    playQuestion();
+                }
+            }, 500);
+        }
+
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -166,6 +175,7 @@ const setExample = () => {
 
 // 클릭 이벤트
 const setClickEvent = () => {
+
     $(".js-wrapper-example").on("click", e => {
         if (isWorking || isClick) {
             return false;
@@ -209,13 +219,19 @@ const setClickEvent = () => {
             const afterButtonPush = () => {
                 isCorrect = checkAnswer();
 
-                isCorrect = checkAnswer();
+                // isCorrect = checkAnswer();
 
                 if (isCorrect) {
                     shootBeam();
+                    if (isSafari()) {
+                        playTimeout(quizData.Sound1, 4000);
+                    }
                 }
                 else {
                     unexplodedBeam();
+                    if (isSafari()) {
+                        playTimeout(quizData.Sound1, 4000);
+                    }
                 }
             }
         }
@@ -255,18 +271,31 @@ const afterRunMonster = () => {
                 $('.js-wrapper-example').eq(crntIndex).addClass("bigzoom");
             }
 
-            playSound(quizData.Sound1,
-                function () {
-                    setTimeout(() => {
-                        $(".js-character-leoni").removeClass("correct incorrect");
-                        $(".js-wrapper-monster").removeClass("correct incorrect");
-                        $(".js-wrapper-example").remove();
-                        $(".js-wrapper-question").children().remove();
+            if (isSafari()) {
+                setTimeout(() => {
+                    $(".js-character-leoni").removeClass("correct incorrect");
+                    $(".js-wrapper-monster").removeClass("correct incorrect");
+                    $(".js-wrapper-example").remove();
+                    $(".js-wrapper-question").children().remove();
 
-                        fireClickEvent();
-                        setupQuiz();
-                    }, 1000);
-                });
+                    fireClickEvent();
+                    setupQuiz();
+                }, 1000);
+            } else {
+                playSound(quizData.Sound1,
+                    function () {
+                        setTimeout(() => {
+                            $(".js-character-leoni").removeClass("correct incorrect");
+                            $(".js-wrapper-monster").removeClass("correct incorrect");
+                            $(".js-wrapper-example").remove();
+                            $(".js-wrapper-question").children().remove();
+    
+                            fireClickEvent();
+                            setupQuiz();
+                        }, 1000);
+                    });
+            }
+
         }
         else {
             setTimeout(() => {
@@ -275,7 +304,11 @@ const afterRunMonster = () => {
         }
     }
     else {
-        playQuestion();
+        if (isSafari()) {
+            isWorking = false; isClick = false; lockScreen(isWorking);
+        } else {
+            playQuestion();
+        }
     }
 }
 

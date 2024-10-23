@@ -1359,65 +1359,10 @@ const sndWheekk =
   "https://wcfresource.a1edu.com/newsystem/sound/dodoabc/alphabet/effect/wheeek.mp3";
 const sndPoint = "0.5";
 
-// 웹 브라우저 정보(사용방법 : detectEnvironment(navigator.userAgent))
-function detectEnvironment(userAgent) {
-  // iOS WebView 감지
-  if (/iPhone|iPad|iPod/.test(userAgent) && !/Safari/.test(userAgent)) {
-    return "iOS WebView";
-  }
-
-  // Android WebView 감지
-  if (/Android/.test(userAgent) && /wv/.test(userAgent)) {
-    return "Android WebView";
-  }
-
-  // Chrome 브라우저 감지
-  if (/Chrome/.test(userAgent) && !/Edge|Edg|OPR/.test(userAgent)) {
-    return "Chrome";
-  }
-
-  // Safari 브라우저 감지
-  if (/Safari/.test(userAgent) && !/Chrome/.test(userAgent)) {
-    return "Safari";
-  }
-
-  // Firefox 브라우저 감지
-  if (/Firefox/.test(userAgent)) {
-    return "Firefox";
-  }
-
-  // Edge 브라우저 감지
-  if (/Edg/.test(userAgent)) {
-    return "Edge";
-  }
-
-  return "Unknown";
-}
-
-// 접속 디바이스 구별 함수 (https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js)
-const md = new MobileDetect(window.navigator.userAgent);
-const isAndroid = md.os() === 'AndroidOS';
-const isIos = md.os() === 'iOS' || 'iPadOS';
-
-// 이건 사파리나 iOS 인가?
 function isSafari() {
-  // var ua = navigator.userAgent.toLowerCase();
-  // return ua.indexOf("safari") !== -1 && ua.indexOf("chrome") === -1;
-  return detectEnvironment(navigator.userAgent) === 'iOS WebView' || detectEnvironment(navigator.userAgent) === 'Safari';
+  var ua = navigator.userAgent.toLowerCase();
+  return ua.indexOf("safari") !== -1 && ua.indexOf("chrome") === -1;
 }
-
-// 터치 장치인지 구별하기
-function isTouchDevice() {
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
-}
-
-// 모바일(태블릿) 사파리나 iOS에서 lockScreen 실행
-function lockScreenIos() {
-  if (isTouchDevice()) {
-    lockScreen(true);
-    document.querySelector('.js-screen-lock').classList.add('screen-lock-ios');
-  }
-};
 
 // 뒤로가기 방지
 // history.pushState(null, null, location.href);
@@ -1433,87 +1378,173 @@ document.oncontextmenu = function () {
   return false;
 };
 
-// 안드로이드일때 전체화면 실행
-function openFullscreen() {
-  const elem = document.documentElement; // 전체 문서를 대상으로 설정
-  if (isAndroid) {
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      // Firefox
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      // Chrome, Safari, Opera
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      // IE/Edge
-      elem.msRequestFullscreen();
-    }
-  }
-}
+// 접속 디바이스 구별 함수 (https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js)
+const md = new MobileDetect(window.navigator.userAgent);
 
-// 스케일을 적용할 요소
+// 화면 사이즈를 변경하기 위한 변수
+let screenWidth = screen.width;
+let screenHeight = screen.height;
+let isPortrait = screenHeight > screenWidth;
+let wrapperScalePortrait = screenWidth / 1280;
+let wrapperScaleLandscape = screenHeight / 720;
+let wrapperScalePortraitToLandscape = screenHeight / 1280; // onload 세로 -> 가로 - 모바일
+let wrapperScaleLandscapeToPortrait = screenWidth / 720; // onload 가로 -> 세로 - 모바일
+let wrapperScalePortraitToLandscapeByTab = screenWidth / 1280; // onload 세로 -> 가로 - 태블릿
+let wrapperScaleLandscapeToPortraitByTab = screenHeight / 1280; // onload 가로 -> 세로 - 태블릿
 let targetLayout = ".wrapper-layout";
 let correctionItemLayout = ".gu-transit";
 
-// PC, 태블릿 스케일
-function scaleElementPC() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+// 모바일 일때 전체화면
+// function openFullscreen() {
+//   const elem = document.documentElement; // 전체 문서를 대상으로 설정
+//   if (isMobile) {
+//     if (elem.requestFullscreen) {
+//       elem.requestFullscreen();
+//     } else if (elem.mozRequestFullScreen) {
+//       // Firefox
+//       elem.mozRequestFullScreen();
+//     } else if (elem.webkitRequestFullscreen) {
+//       // Chrome, Safari, Opera
+//       elem.webkitRequestFullscreen();
+//     } else if (elem.msRequestFullscreen) {
+//       // IE/Edge
+//       elem.msRequestFullscreen();
+//     }
+//   }
+// }
 
-  const isTouchScreen = () => {
-    return navigator.maxTouchPoints > 0;
-  }
+// 화면 사이즈 조정 (학습 실행시)
+document.addEventListener("DOMContentLoaded", function () {
+  // document.querySelector(targetLayout).addEventListener('click', function() {
+  //     openFullscreen();
+  // });
 
-  let portraitScale = (width - 10) / 1280;
-  let landscapeScale = (height - 10) / 720;
+  screenWidth = screen.width;
+  screenHeight = screen.height;
+  if (isMobile) {
+    // 태블릿일 때
+    if (md.tablet()) {
+      if (isPortrait) {
+        document.querySelector(targetLayout).style.transform =
+          `scale(${wrapperScalePortrait})`;
+        document.querySelector(correctionItemLayout).style.transform =
+          `scale(${wrapperScalePortrait})`;
+      } else {
+        document.querySelector(targetLayout).style.transform =
+          `scale(${wrapperScalePortrait})`;
+        document.querySelector(correctionItemLayout).style.transform =
+          `scale(${wrapperScalePortrait})`;
+      }
+    }
 
-  if (window.matchMedia("(orientation: landscape)").matches) {
-    document.querySelector(targetLayout).style.transform =
-      `scale(${isTouchScreen() ?  portraitScale :landscapeScale})`;
-    document.querySelector(correctionItemLayout).style.transform =
-      `scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
+    // 모바일일 때
+    else {
+      // if (isPortrait) {
+      //     document.querySelector(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
+      //     document.querySelector(correctionItemLayout).style.transform = `scale(${wrapperScalePortrait})`;
+      // } else {
+      //     document.querySelector(targetLayout).style.transform = `scale(${wrapperScaleLandscape})`;
+      //     document.querySelector(correctionItemLayout).style.transform = `scale(${wrapperScaleLandscape})`;
+      // }
+      switch (window.orientation) {
+        // onload 세로 -> 가로
+        case 0:
+          if (isPortrait) {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScalePortrait})`;
+            document.querySelector(correctionItemLayout).style.transform =
+              `scale(${wrapperScalePortrait})`;
+          } else {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScalePortraitToLandscape})`;
+            document.querySelector(correctionItemLayout).style.transform =
+              `scale(${wrapperScaleLandscape})`;
+          }
+          break;
+        // onload 가로 -> 세로
+        case 90:
+        case -90:
+          if (isPortrait) {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScaleLandscapeToPortrait})`;
+            document.querySelector(correctionItemLayout).style.transform =
+              `scale(${wrapperScalePortrait})`;
+          } else {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScaleLandscape})`;
+            document.querySelector(correctionItemLayout).style.transform =
+              `scale(${wrapperScaleLandscape})`;
+          }
+          break;
+      }
+    }
   } else {
-    document.querySelector(targetLayout).style.transform =
-      `scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
-    document.querySelector(correctionItemLayout).style.transform =
-      `scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
+    if (screenWidth < 1440) {
+      document.querySelector(targetLayout).style.transform =
+        `scale(${wrapperScalePortrait})`;
+      document.querySelector(correctionItemLayout).style.transform =
+        `scale(${wrapperScalePortrait})`;
+    }
   }
-}
+});
 
-// 모바일 스케일
-function scaleElementMobile() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;  
-
-  let portraitScale = (width - 5) / 1280;
-  let landscapeScale = (height - 5) / 720;
-
-  if (window.matchMedia("(orientation: landscape)").matches) {
-    document.querySelector(targetLayout).style.transform =
-      `scale(${landscapeScale})`;
-    document.querySelector(correctionItemLayout).style.transform =
-      `scale(${landscapeScale})`;
-  } else {
-    document.querySelector(targetLayout).style.transform =
-      `scale(${portraitScale})`;
-    document.querySelector(correctionItemLayout).style.transform =
-      `scale(${portraitScale})`;
+// 화면 사이즈 조정 (디바이스 회전시)
+window.addEventListener("orientationchange", function () {
+  if (isMobile) {
+    // 태블릿일때
+    if (md.tablet()) {
+      switch (window.orientation) {
+        // onload 세로 -> 가로
+        case 0:
+          if (isPortrait) {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScalePortraitToLandscapeByTab})`;
+          } else {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScaleLandscapeToPortraitByTab})`;
+          }
+          break;
+        // onload 가로 -> 세로
+        case 90:
+        case -90:
+          if (isPortrait) {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScaleLandscapeToPortraitByTab})`;
+          } else {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScalePortrait})`;
+          }
+          break;
+      }
+    }
+    // 모바일일때
+    else {
+      switch (window.orientation) {
+        // onload 세로 -> 가로
+        case 0:
+          if (isPortrait) {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScalePortrait})`;
+          } else {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScalePortraitToLandscape})`;
+          }
+          break;
+        // onload 가로 -> 세로
+        case 90:
+        case -90:
+          if (isPortrait) {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScaleLandscapeToPortrait})`;
+          } else {
+            document.querySelector(targetLayout).style.transform =
+              `scale(${wrapperScaleLandscape})`;
+          }
+          break;
+      }
+    }
   }
-}
-
-// 스마트폰 사이즈인지 체크
-function checkMobile() {
-  if (window.matchMedia("(orientation: landscape)").matches) {
-    return screen.height < 600
-  } 
-  if (window.matchMedia("(orientation: portrait)").matches) {
-    return screen.width < 600
-  }
-}
-
-window.addEventListener('DOMContentLoaded', checkMobile() ? scaleElementMobile : scaleElementPC);
-window.addEventListener('resize', checkMobile() ? scaleElementMobile : scaleElementPC);
+});
 
 // sql 데이터 로딩 [
 const loadQuizData = async (pStep, pQuizType, fnOnSucc) => {
@@ -1725,6 +1756,82 @@ $(document).ready(() => {
 // Sound 관련 [
 var _snd;
 
+// var Sound = function (pObj, pFunStartPlay, pFunEndPlay) {
+//   this.isplay = false;
+//   this.infinity = false;
+
+//   try {
+//     if (pObj != undefined) {
+//       this.audAtt = pObj;
+//       this.StartFun = pFunStartPlay;
+//       this.EndFun = pFunStartPlay;
+//       this.repeat = audAtt.repeat;
+
+//       this.audio = new Audio(audAtt.src);
+
+//       if (repeat < 0) {
+//         alert("repeat must be bigger than 0");
+
+//         return undefined;
+//       } else if (this.repeat == 0) {
+//         this.infinity = true;
+//       }
+
+//       this.Play = function () {
+//         audio.addEventListener("ended", function () {
+//           repeat -= 1;
+
+//           if (repeat > 0 || infinity) {
+//             audio.play();
+//           } else {
+//             // Stop Sound
+//             isplay = false;
+//             if (pFunEndPlay != undefined) {
+//               pFunEndPlay();
+//             }
+//           }
+//         });
+
+//         audio.addEventListener("timeupdate", function () {
+//           soundDuration = Math.ceil(audio.duration * 1000);
+
+//           if (isplay == false) {
+//             // Play Sound
+//             isplay = true;
+
+//             if (pFunStartPlay != undefined) {
+//               pFunStartPlay();
+//             }
+//           }
+//         });
+
+//         audio.volume = 1;
+//         audio.load();
+//         audio.play();
+//       };
+
+//       this.Stop = function () {
+//         audio.setAttribute("src", "");
+//         audio.addEventListener("timeupdate", null);
+//         audio.pause();
+//         if (audio.duration) {
+//           audio.currentTime = 0;
+//         }
+
+//         isplay = false;
+//       };
+
+//       this.Pause = function () {
+//         alert("Pause");
+//       };
+//     }
+//   } catch (e) {
+//     alert(e);
+//   }
+
+//   return this;
+// };
+
 var Sound = function (pObj, pFunStartPlay, pFunEndPlay) {
   this.isplay = false;
   this.infinity = false;
@@ -1733,82 +1840,75 @@ var Sound = function (pObj, pFunStartPlay, pFunEndPlay) {
     if (pObj != undefined) {
       this.audAtt = pObj;
       this.StartFun = pFunStartPlay;
-      this.EndFun = pFunStartPlay;
-      this.repeat = audAtt.repeat;
+      this.EndFun = pFunEndPlay;
+      this.repeat = this.audAtt.repeat;
+      
+      // 오디오 객체 생성
+      this.audio = new Audio(this.audAtt.src);
 
-      this.audio = new Audio(audAtt.src);
-
-      if (repeat < 0) {
+      if (this.repeat < 0) {
         alert("repeat must be bigger than 0");
-
         return undefined;
-      } else if (this.repeat == 0) {
+      } else if (this.repeat === 0) {
         this.infinity = true;
       }
 
-      this.Play = function () {
-        audio.addEventListener("ended", function () {
-          repeat -= 1;
+      // 재생 함수 정의
+      this.Play = () => {
+        this.audio.addEventListener("ended", () => {
+          this.repeat -= 1;
 
-          if (repeat > 0 || infinity) {
-            audio.play();
-          } else {
-            // Stop Sound
-            isplay = false;
-            if (pFunEndPlay != undefined) {
-              pFunEndPlay();
-            }
-          }
-        });
-
-        audio.addEventListener("timeupdate", function () {
-          soundDuration = Math.ceil(audio.duration * 1000);
-
-          if (isplay == false) {
-            // Play Sound
-            isplay = true;
-
-            if (pFunStartPlay != undefined) {
-              pFunStartPlay();
-            }
-          }
-        });
-
-        audio.volume = 1;
-        audio.load();
-        if (isSafari()) {
-          audio.play()
-            .then(() => {
-              console.log("Audio is playing.");
-              document.querySelector('.js-screen-lock').addEventListener('click', function (e) {
-                lockScreen(false);
-                audio.play();
-              });
-            })
-            .catch((error) => {
-              console.error("Error playing audio:", error);
+          if (this.repeat > 0 || this.infinity) {
+            this.audio.play().catch((error) => {
               if (error.name === "NotAllowedError") {
-                lockScreenIos();
+                alert("재생 권한이 필요합니다. 사용자의 조작을 기다립니다. -ended");
+                this.audio.play();
+              } else {
+                console.error("오디오 재생 오류:", error);
               }
             });
-        } else {
-          audio.play();
-        }
+          } else {
+            // Stop Sound
+            this.isplay = false;
+            if (this.EndFun != undefined) {
+              this.EndFun();
+            }
+          }
+        });
+
+        this.audio.addEventListener("timeupdate", () => {
+          if (!this.isplay) {
+            // Play Sound
+            this.isplay = true;
+
+            if (this.StartFun != undefined) {
+              this.StartFun();
+            }
+          }
+        });
+
+        this.audio.volume = 1;
+        this.audio.load();
+        this.audio.play().catch((error) => {
+          if (error.name === "NotAllowedError") {
+            alert("재생 권한이 필요합니다. 사용자의 조작을 기다립니다. -error");
+          } else {
+            console.error("오디오 재생 오류:", error);
+          }
+        });
       };
 
-      this.Stop = function () {
-        audio.setAttribute("src", "");
-        audio.addEventListener("timeupdate", null);
-        audio.pause();
-        if (audio.duration) {
-          audio.currentTime = 0;
-        }
-
-        isplay = false;
+      // 정지 함수 정의
+      this.Stop = () => {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.isplay = false;
       };
 
-      this.Pause = function () {
-        alert("Pause");
+      // 일시 정지 함수 정의
+      this.Pause = () => {
+        this.audio.pause();
+        this.isplay = false;
       };
     }
   } catch (e) {
@@ -1858,21 +1958,6 @@ const playEffect2 = (pSrc) => {
   var audio = new Audio(pSrc);
   audio.play();
 };
-
-const playMute = (pSrc) => {
-  var audio = new Audio(pSrc);
-  audio.muted = true;
-  audio.play();
-};
-
-const playTimeout = (pSrc, time) => {
-  var audio = new Audio(pSrc);
-  audio.pause();
-  setTimeout(() => {
-    audio.play();
-  }, time);
-
-}
 
 const stopEffect = () => {
   let audio = $("#effect1");
@@ -1977,7 +2062,6 @@ const lockScreen = (pLock) => {
     $(".js-screen-lock").addClass("d-none");
     $(".js-speaker").removeClass("locked");
     $(".js-speaker").removeClass("delay");
-    $(".js-screen-lock").removeClass("screen-lock-ios");
   }
 };
 
@@ -2259,7 +2343,6 @@ function dodomodal(image1, image2, image3, callback) {
   modalContent.style.position = "relative";
   modalContent.style.touchAction = "none"; // Disable touch actions
   modalContent.style.webkitTouchCallout = "none"; // Disable touch callout (iOS Safari)
-  modalContent.style.maxWidth = "420px";
 
   // Change background image on mouse over and revert on mouse out
   modalContent.onmouseover = function () {
@@ -2329,8 +2412,8 @@ function dodomodalStart() {
   // Show alert and close modal when modal content is clicked
   modalContent.onclick = function () {
     document.body.removeChild(modal);
-    openFullscreen();
     setTimeout(() => {
+      // openFullscreen();
       startStudy();
     }, 500);
   };
@@ -2456,15 +2539,6 @@ function dodomodalFinish(callbackLeft, callbackRight) {
   // Append elements to the modal
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
-}
-
-const dodomodalNext = (callback) => {
-  dodomodal(
-      '../../include/images/btn_nextquiz01.png',
-      '../../include/images/btn_nextquiz02.png',
-      '../../include/images/cursor_hover.png',
-      callback
-  );
 }
 
 const hideDoDoModal = () => {

@@ -66,10 +66,13 @@ const setupQuiz = () => {
         checkStudyType();
 
         isCorrect = true;
-
-        setTimeout(() => {
+        if (isSafari()) {
             setExample();
-        }, 500);
+        } else {
+            setTimeout(() => {
+                setExample();
+            }, 500);
+        }
     }
     catch (e) {
         alert("Setup Quiz Error: " + e);
@@ -242,28 +245,51 @@ const checkAnswer = () => {
 const correctAction = () => {
     lockScreen(true)
 
-    playSound(sndCorrect, function () {
+    if (isSafari()) {
         setInit();
         $(".answer_box").append(`<li class="word" style="width:900px;">${quizData.Example1 + ' ' + quizData.Example2 + ' ' + quizData.Example3}</li>`);
-        playSound(quizData.Sound1, function () {
-            setTimeout(() => {
-                correctCount++;
-                if (correctCount < quizDataArr.length) {
-                    setInit();
-                    setupQuiz();
-                } else {
-                    playEffect1(sndFallingStars);
-                    $('.js-shooting_stars').append(`<img class="js_star shooting_star1" src="./images/shooting_star.png" />
-                        <img class="js_star shooting_star2" src="./images/shooting_star.png" />
-                        <img class="js_star shooting_star3" src="./images/shooting_star.png" />`);
+        playEffect1(quizData.Sound1);
+        setTimeout(() => {
+            correctCount++;
+            if (correctCount < quizDataArr.length) {
+                setInit();
+                setupQuiz();
+            } else {
+                playEffect1(sndFallingStars);
+                $('.js-shooting_stars').append(`<img class="js_star shooting_star1" src="./images/shooting_star.png" />
+                    <img class="js_star shooting_star2" src="./images/shooting_star.png" />
+                    <img class="js_star shooting_star3" src="./images/shooting_star.png" />`);
 
-                    setTimeout(() => {
-                        dodomodalFinish();
-                    }, 3000);
-                }
-            }, 1500);
+                setTimeout(() => {
+                    dodomodalFinish();
+                }, 1000);
+            }
+        }, 3500);
+    } else {
+        playSound(sndCorrect, function () {
+            setInit();
+            $(".answer_box").append(`<li class="word" style="width:900px;">${quizData.Example1 + ' ' + quizData.Example2 + ' ' + quizData.Example3}</li>`);
+            playSound(quizData.Sound1, function () {
+                setTimeout(() => {
+                    correctCount++;
+                    if (correctCount < quizDataArr.length) {
+                        setInit();
+                        setupQuiz();
+                    } else {
+                        playEffect1(sndFallingStars);
+                        $('.js-shooting_stars').append(`<img class="js_star shooting_star1" src="./images/shooting_star.png" />
+                            <img class="js_star shooting_star2" src="./images/shooting_star.png" />
+                            <img class="js_star shooting_star3" src="./images/shooting_star.png" />`);
+    
+                        setTimeout(() => {
+                            dodomodalFinish();
+                        }, 3000);
+                    }
+                }, 1500);
+            });
         });
-    });
+    }
+
 }
 
 const playQuestion = () => {

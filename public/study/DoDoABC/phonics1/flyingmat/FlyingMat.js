@@ -165,8 +165,19 @@ const setClickEvent = () => {
             const answer = $(".wrapper-cloud").eq(index).html();
             isCorrect = checkAnswer(answer);
             dodoFly(index);   // for test
+            if (isSafari()) {
+                setTimeout(() => {
+                    isCorrect ? correctPlay() : playEffect1(sndIncorrectBoing);
+                }, 900);
+            }
         }
     });
+}
+
+// 사파리식 정답 결과
+function correctPlay () {
+    playEffect1(sndCorrect);
+    playEffect1(quizData.Sound1);
 }
 
 // 정답 체크
@@ -212,13 +223,20 @@ const correctAction = (pIndex) => {
 const incorrectAction = index => {
     $(".wrapper-example").eq(index).addClass("incorrect");
     $(".character-dodo").addClass("incorrect");
-
-    playSound(sndIncorrectBoing, function () {
+    
+    if (isSafari()) {
         setTimeout(() => {
             setInit();
             playWord();
-        }, 600);
-    });
+        }, 2000);
+    } else {
+        playSound(sndIncorrectBoing, function () {
+            setTimeout(() => {
+                setInit();
+                playWord();
+            }, 600);
+        });
+    }
 }
 
 const afterAction = (pIndex) => {
@@ -256,24 +274,36 @@ const displayFlyingMat = (pIndex) => {
     $(".js-wrapper-flying-mat" + characterNumArr[pIndex]).removeClass("d-none");            // drop된 위치의 도도-캐릭터-매트 보이게
     $(".wrapper-example").eq(pIndex).removeClass("character" + characterNumArr[pIndex]);    // drop된 위치의 구름 뒤 캐릭터 안보이게
 
-    playSound(sndCorrect,
-        function () {
-            playSound(quizData.Sound1, function () { flyingOut(pIndex); });                 // 단어음원 들려준 후 날아감
-            $(".js-wrapper-question").empty();
-            //$(".js-wrapper-question").append("<img src='" + quizData.Image1 + "' class='bigger'/><p class='js-te'>" + quizData.CorrectText + "</p>");
-            $(".js-wrapper-question").append("<img src='" + quizData.Image1 + "' class='bigger'/>");
-            let splitCorrectText = quizData.CorrectText.split(quizData.Example1);
-            let s1 = "<span>" + splitCorrectText[0] + "</span>";
-            let s2 = "<span style ='color:#a50000'>" + quizData.Example1 + "</span>";
-            let s3 = "<span>" + splitCorrectText[1] + "</span>";
-            $(".js-wrapper-question").append("<p class='js-te'>" + s1 + s2 + s3 + "</p>");
-
-        });
+    if (isSafari()) {
+        setTimeout(() => {flyingOut(pIndex);}, 2500);
+        $(".js-wrapper-question").empty();
+        //$(".js-wrapper-question").append("<img src='" + quizData.Image1 + "' class='bigger'/><p class='js-te'>" + quizData.CorrectText + "</p>");
+        $(".js-wrapper-question").append("<img src='" + quizData.Image1 + "' class='bigger'/>");
+        let splitCorrectText = quizData.CorrectText.split(quizData.Example1);
+        let s1 = "<span>" + splitCorrectText[0] + "</span>";
+        let s2 = "<span style ='color:#a50000'>" + quizData.Example1 + "</span>";
+        let s3 = "<span>" + splitCorrectText[1] + "</span>";
+        $(".js-wrapper-question").append("<p class='js-te'>" + s1 + s2 + s3 + "</p>");
+    } else {
+        playSound(sndCorrect,
+            function () {
+                playSound(quizData.Sound1, function () { flyingOut(pIndex); });                 // 단어음원 들려준 후 날아감
+                $(".js-wrapper-question").empty();
+                //$(".js-wrapper-question").append("<img src='" + quizData.Image1 + "' class='bigger'/><p class='js-te'>" + quizData.CorrectText + "</p>");
+                $(".js-wrapper-question").append("<img src='" + quizData.Image1 + "' class='bigger'/>");
+                let splitCorrectText = quizData.CorrectText.split(quizData.Example1);
+                let s1 = "<span>" + splitCorrectText[0] + "</span>";
+                let s2 = "<span style ='color:#a50000'>" + quizData.Example1 + "</span>";
+                let s3 = "<span>" + splitCorrectText[1] + "</span>";
+                $(".js-wrapper-question").append("<p class='js-te'>" + s1 + s2 + s3 + "</p>");
+    
+            });
+    }
 }
 
 const flyingOut = (pIndex) => {
     $(".js-wrapper-flying-mat" + characterNumArr[pIndex]);
-    playEffect1(sndWhoosh);
+    playEffect2(sndWhoosh);
     $(".js-wrapper-flying-mat" + characterNumArr[pIndex]).animate({ left: 1400 }, 2500,
         function () {
             afterAction();

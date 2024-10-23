@@ -67,9 +67,14 @@ const setupQuiz = () => {
 
         isCorrect = true;
 
-        setTimeout(() => {
+        if (isSafari()) {
             setExample();
-        }, 500);
+        } else {
+            setTimeout(() => {
+                setExample();
+            }, 500);
+        }
+
     }
     catch (e) {
         alert("Setup Quiz Error: " + e);
@@ -195,6 +200,9 @@ const checkAnswer = () => {
 
         if (isCorrect) {
             correctAction();
+            if (isSafari()) {
+                playTimeout(quizData.Sound1, 3000);
+            }
         }
         else {
             incorrectAction();
@@ -211,6 +219,9 @@ const checkAnswer = () => {
 
         if (isCorrect) {
             correctAction();
+            if (isSafari()) {
+                playTimeout(quizData.Sound1, 3000);
+            }
         }
         else {
             incorrectAction();
@@ -236,7 +247,8 @@ const correctAction = () => {
     $(".rocket_goma, .rocket_leoni, .rocket_gino, .rocket_edmond").on("animationend", () => {
         setInit();
         $(".answer_box").append(`<li class="word" style="width:900px;">${quizData.Example1 + ' ' + quizData.Example2 + ' ' + quizData.Example3}</li>`);
-        playSound(quizData.Sound1, function () {
+
+        if (isSafari()) {
             setTimeout(() => {
                 correctCount++;
                 if (correctCount < quizDataArr.length) {
@@ -245,15 +257,34 @@ const correctAction = () => {
                 } else {
                     setTimeout(() => {
                         dodomodalFinish();
-                    }, 1000);
+                    }, 1500);
                 }
-            }, 1000);
-        });
+            }, 5000);
+        } else {
+            playSound(quizData.Sound1, function () {
+                setTimeout(() => {
+                    correctCount++;
+                    if (correctCount < quizDataArr.length) {
+                        setInit();
+                        setupQuiz();
+                    } else {
+                        setTimeout(() => {
+                            dodomodalFinish();
+                        }, 1000);
+                    }
+                }, 1000);
+            });
+        }
     });
 }
 
 const playQuestion = () => {
-    playSound(quizData.Sound1, function () { isWorking = false; isClick = false; lockScreen(isWorking); });
+    if (isSafari()) {
+        playEffect1(quizData.Sound1);
+        isWorking = false; isClick = false; lockScreen(isWorking);
+    } else {
+        playSound(quizData.Sound1, function () { isWorking = false; isClick = false; lockScreen(isWorking); });
+    }
 };
 
 const incorrectAction = () => {

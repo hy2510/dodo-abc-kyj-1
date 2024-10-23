@@ -126,13 +126,22 @@ const setExample = () => {
         $(".js-wrapper-examples").append(appendHtml);
         $(".imgquiz").attr("src", quizData.Image1);
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playQuestion);
             } else {
                 playQuestion();
             }
-        }, 1000);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playQuestion);
+                } else {
+                    playQuestion();
+                }
+            }, 1000);
+        }
+
     }
     catch (e) {
         alert("Set Question Error: " + e);

@@ -137,13 +137,21 @@ const setExample = () => {
         $(".js-wrapper-examples").empty();
         $(".js-wrapper-examples").append(appendHtml);
 
-        setTimeout(() => {
+        if (isSafari()) {
             if (correctCount > 0) {
                 dodomodalNext(playQuestion);
             } else {
                 playQuestion();
             }
-        }, 500);
+        } else {
+            setTimeout(() => {
+                if (correctCount > 0) {
+                    dodomodalNext(playQuestion);
+                } else {
+                    playQuestion();
+                }
+            }, 500);   
+        }
     }
     catch (e) {
         alert("Set Example Error: " + e);
@@ -285,9 +293,15 @@ const setClickEvent = () => {
 
             if (isCorrect) {
                 fillPlanet(index);
+                if (isSafari()) {
+                    playTimeout(quizData.Sound1, 4000)
+                };
             }
             else {
                 lightPlanet(index);
+                if (isSafari()) {
+                    playMute(quizData.Sound1)
+                };
             }
         }
     })
@@ -298,25 +312,42 @@ const afterPlanetAction = () => {
     if (isCorrect) {
         const afterMovePlanet = () => {
             $(".js-wrapper-example").on("animationend", () => {
-                playSound(quizData.Sound1,
-                    function () {
-                        correctCount++;
-
-                        if (correctCount < maxCorrectCount) {
-                            setTimeout(() => {
-                                $(".js-wrapper-character").removeClass("correct");
-                                $(".js-wrapper-example").remove();
-                                ////
-                                setupQuiz();
-                            }, 1000);
-                        }
-                        else {
-                            setTimeout(() => {
-                                dodomodalFinish();
-                            }, 1000);
-                        }
-                    });
-
+                if (isSafari()) {
+                    correctCount++;
+    
+                    if (correctCount < maxCorrectCount) {
+                        setTimeout(() => {
+                            $(".js-wrapper-character").removeClass("correct");
+                            $(".js-wrapper-example").remove();
+                            ////
+                            setupQuiz();
+                        }, 1000);
+                    }
+                    else {
+                        setTimeout(() => {
+                            dodomodalFinish();
+                        }, 1000);
+                    }
+                } else {
+                    playSound(quizData.Sound1,
+                        function () {
+                            correctCount++;
+    
+                            if (correctCount < maxCorrectCount) {
+                                setTimeout(() => {
+                                    $(".js-wrapper-character").removeClass("correct");
+                                    $(".js-wrapper-example").remove();
+                                    ////
+                                    setupQuiz();
+                                }, 1000);
+                            }
+                            else {
+                                setTimeout(() => {
+                                    dodomodalFinish();
+                                }, 1000);
+                            }
+                        });
+                }
             })
         }
 

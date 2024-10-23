@@ -25,9 +25,9 @@ $(document).ready(() => {
 });
 
 const startStudy = () => {
-    if (isSafari()) {
-        $(".js-speaker").addClass("safari");
-    }
+    // if (isSafari()) {
+    //     $(".js-speaker").addClass("safari");
+    // }
 
     lockScreen(true);
     currentActivity = 'A5A';
@@ -323,6 +323,7 @@ const pleasureCharacter = () => {
     setTimeout(() => {
         afterPleasureCharacter();
     }, 1000);
+    playWord();
 }
 
 const afterPleasureCharacter = () => {
@@ -335,12 +336,12 @@ const afterPleasureCharacter = () => {
 
             drake.destroy();
 
-            playWord();
+            // playWord();
 
             setupQuiz();
         }
         else {
-            playWord();
+            // playWord();
             playEffect1(wheel);
             degRate = 3.5;
             bgmVolume(0.3);
