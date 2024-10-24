@@ -235,11 +235,21 @@ const afterPaperMove = () => {
 
         // playEffect1(sndCorrect);
 
-        setTimeout(() => {
-            playEffect1(sndCorrect);
+        if (isSafari()) {
+            playTimeout(sndCorrect, 500);
             $(".js-question").addClass("bigger");
-            playSound(quizData.Sound1, openPaper);
-        }, 500)
+            playTimeout(quizData.Sound1, 1000);
+            setTimeout(() => {
+                openPaper();
+            }, 3000);
+        } else {
+            setTimeout(() => {
+                playEffect1(sndCorrect);
+                $(".js-question").addClass("bigger");
+                playSound(quizData.Sound1, openPaper);
+            }, 500)
+        }
+
 
         $(".js-wrapper-flower").removeClass("d-none");
         $(".js-character").addClass("correct");
@@ -253,9 +263,17 @@ const afterPaperMove = () => {
 
         $(".js-character").addClass("incorrect");
         $(".js-paper").addClass("shake");
-        setTimeout(() => {
-            playSound(sndIncorrectBoing, returnPaper);
-        }, 1000)
+        
+        if (isSafari()) {
+            playTimeout(sndIncorrectBoing, 1000);
+            setTimeout(() => {
+                returnPaper();
+            }, 1000)
+        } else {
+            setTimeout(() => {
+                playSound(sndIncorrectBoing, returnPaper);
+            }, 1000)
+        }
     }
 }
 

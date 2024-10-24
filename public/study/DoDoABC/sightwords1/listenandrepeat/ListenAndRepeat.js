@@ -26,7 +26,7 @@ let avgTiming;
 let recordingTime = 0;
 const additionSec = 2.0;    // 사운드 길이가 1초이면 녹음 시간은 2초
 const drawCircleRate = 10;
-const passMark = 0;
+const passMark = 20;
 
 let incorrectCnt = 0;
 let quizLoaded = false; // 첫번째 에드몽 액션 구분

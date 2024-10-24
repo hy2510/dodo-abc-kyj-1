@@ -1,4 +1,14 @@
-﻿/*!@license Copyright 2013, Heinrich Goebl, License: MIT, see https://github.com/hgoebl/mobile-detect.js*/
+﻿let lastTouchEnd = 0;
+
+document.addEventListener('touchend', function(event) {
+  const now = (new Date()).getTime();
+  if (now - lastTouchEnd <= 300) {  // 300ms 이내에 두 번의 터치가 발생하면 확대 방지
+    event.preventDefault();  // 기본 확대 동작을 막음
+  }
+  lastTouchEnd = now;
+}, false);
+
+/*!@license Copyright 2013, Heinrich Goebl, License: MIT, see https://github.com/hgoebl/mobile-detect.js*/
 !(function (a, b) {
   a(function () {
     "use strict";
@@ -1504,11 +1514,15 @@ function scaleElementMobile() {
 
 // 스마트폰 사이즈인지 체크
 function checkMobile() {
-  if (window.matchMedia("(orientation: landscape)").matches) {
-    return screen.height < 600
-  } 
-  if (window.matchMedia("(orientation: portrait)").matches) {
-    return screen.width < 600
+  if (!md.is('iPhone')) {
+    if (window.matchMedia("(orientation: landscape)").matches) {
+      return screen.height < 600
+    } 
+    if (window.matchMedia("(orientation: portrait)").matches) {
+      return screen.width < 600
+    }
+  } else {
+    return true;
   }
 }
 

@@ -27,7 +27,7 @@ let avgTiming;
 let isPass = false;
 let recordCnt = 0;
 
-const passMark = 0;
+const passMark = 20;
 
 let isQuizWord = true;
 
@@ -406,6 +406,7 @@ const correctAction = () => {
     lockScreen(false);
 
     if (isSafari()) {
+        playEffect1(audCorrect);
         setTimeout(() => {
             $(".wrapper-letter").removeClass("correct");
         }, 2000);

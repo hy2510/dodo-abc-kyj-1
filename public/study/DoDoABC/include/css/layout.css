@@ -1,6 +1,7 @@
 ﻿body, html {
     /* 화면을 길게 누르고 있을때 뜨는 팝업이나 액션시트를 제어 */
-    touch-action: none;
+    /* touch-action: none; */
+    touch-action: manipulation;
     -webkit-touch-callout: none;
 
     -webkit-tap-highlight-color: transparent;

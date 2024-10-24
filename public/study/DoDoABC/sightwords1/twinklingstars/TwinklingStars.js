@@ -194,9 +194,11 @@ const correctAction = (pNum) => {
         playEffect1(sndCorrect);
     }, 200);
 
-    setTimeout(() => {
-        playEffect1(quizData.Sound1);
-    }, 1700);
+    if (!isSafari()) {
+        setTimeout(() => {
+            playEffect1(quizData.Sound1);
+        }, 1700);
+    }
 
     setTimeout(() => {
     correctCount++;

@@ -155,6 +155,11 @@
                                 </li>
                                 <!-- 왼쪽 : 속도조절, 전체화면 -->
                                 <li class="options right">
+                                    <!-- 자막보기/감추기 -->
+                                    <button class="track" id="toggleSubtitlesBtn" onclick="toggleSubtitles()">
+                                        <span class="cc_on"></span>
+                                    </button>
+                                    
                                     <div class="playback-content">
                                         <button class="playback-speed">
                                             <span class="img-speed"></span>
@@ -177,8 +182,9 @@
                         <div class="light-box"></div>
 
                         <!-- 미디어(비디오) 소스 -->
-                        <video id="introVideo" poster="https://wcfresource.a1edu.com/newsystem/moviebook/dodoabc/sw2_thumbnail.jpg" playsinline webkit-playsinline>
+                        <video id="introVideo" poster="https://wcfresource.a1edu.com/newsystem/moviebook/dodoabc/sw2_thumbnail.jpg" playsinline webkit-playsinline crossorigin="anonymous">
                             <source src="#" type="video/mp4" />
+                            <track src="#" kind="captions" srclang="en" label="basic" default="" />
                         </video>
                     </div>
                 </div>

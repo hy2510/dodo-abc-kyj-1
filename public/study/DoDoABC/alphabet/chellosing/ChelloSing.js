@@ -228,12 +228,17 @@ const openCurtain = isCorrect => {
     if (isCorrect) {
         // O
         $(".js-wrapper-curtain-left").addClass("open"); $(".js-stage").addClass("correct");
-        setTimeout(() => { playEffect1(sndCorrect); }, 1000);
+        if (!isSafari()) {
+            setTimeout(() => { playEffect1(sndCorrect); }, 1000);
+        }
+        
     }
     else {
         // X
         $(".js-wrapper-curtain-left").addClass("open"); $(".js-stage").addClass("incorrect");
-        setTimeout(() => { playEffect1(sndIncorrectBoing); }, 1000);
+        if (!isSafari()) {
+            setTimeout(() => { playEffect1(sndIncorrectBoing); }, 1000);
+        }
     }
 }
 

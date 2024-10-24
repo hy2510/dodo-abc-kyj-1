@@ -62,6 +62,7 @@ body,
     opacity: 0;
     transition: all 0.08s ease;
     width: 100%;
+    height: 40px;
     padding: 0px 20px;
     position: absolute;
     top: 25px;
@@ -77,6 +78,9 @@ body,
     .control-menu .skip {
         cursor: url(../../include/images/cursor_hover.png), pointer;
         font-size: 18px;
+        height: 40px;
+        display: flex;
+        align-items: center;
     }
 
     @media (max-width: 1023px) {
@@ -226,12 +230,6 @@ body,
     width: 100%;
     height: 576px;
     border-radius: 0px;
-}
-
-@media screen and (any-pointer:coarse) {
-    .options .fullscreen {
-        display: none;
-    }
 }
 
 .wrapper {
@@ -445,6 +443,21 @@ body,
         background-image: url("../../include/images/ico_re_size.png");
     }
 
+    .options button .cc_on,
+    .options button .cc_off {
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    .options button .cc_on {
+        background-image: url("../../include/images/cc_on.png");
+    }
+
+    .options button .cc_off {
+        background-image: url("../../include/images/cc_off.png");
+    }
+
 .options input {
     height: 3px;
     margin-left: 3px;
@@ -456,12 +469,6 @@ body,
     color: #efefef;
     margin-left: 10px;
     font-size: 12px;
-}
-
-@media (max-width: 1023px) {
-    .options .video-timer {
-        font-size: 1.5em;
-    }
 }
 
 .video-timer .separator {
@@ -541,11 +548,11 @@ body,
         display: none !important;
     }
 
-    /* .options button {
+    .options button {
         height: 30px;
         width: 30px;
         font-size: 17px;
-    } */
+    }
 
     .options .video-timer {
         margin-left: 5px;
@@ -564,11 +571,11 @@ body,
         font-size: 21px;
     }
 
-    /* .options .video-timer,
+    .options .video-timer,
     .progress-area span,
     .speed-options li {
         font-size: 14px;
-    } */
+    }
 
     .playback-content .speed-options {
         width: 75px;
@@ -645,4 +652,19 @@ body,
     display: none;
 }
 
-/*# source MappingURL=videostyle.css.map */
+/*# sourceMappingURL=style.css.map */
+
+/* 자막 추가 시작 - 2023-07-04 박현기 */
+video::cue {
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;
+    font-family: 'Sandoll Gyeokdonggulim';
+    font-size: 5vmin;
+    line-height: 150%;
+}
+
+video::cue(b) {
+    color: yellow;
+}
+/* 자막 추가 끝 - 2023-07-04 박현기 */

@@ -25,17 +25,29 @@ const container = document.querySelector(".container"),
     // 나가기 팝업 실행 버튼
     (btnExit = container.querySelector(".control-menu .exit")),
     // 스킵 팝업 실행 버튼
-    (btnSkip = container.querySelector(".control-menu .skip"))
+    (btnSkip = container.querySelector(".control-menu .skip")),
+    // 자막 버튼
+    (trackBtn = container.querySelector(".track span"))
 
 let timer;
 let myVideo;
+
+// mainVideo.addEventListener("click", () => {
+//     if (mainVideo.paused) return;
+
+//     if ($(".container").hasClass("show-controls")) {
+//         container.classList.remove("show-controls");
+//     } else {
+//         container.classList.add("show-controls");
+//     }
+// })
 
 const hideControls = () => {
     if (mainVideo.paused) return;
 
     timer = setTimeout(() => {
         container.classList.remove("show-controls");
-    }, 3000);
+    }, 2000);
 };
 hideControls();
 
@@ -179,6 +191,28 @@ skipForward.addEventListener("click", () => {
     mainVideo.currentTime += 3
 });
 
+function toggleSubtitles() {
+    const video = document.getElementById('introVideo');
+    const track = video.textTracks[0]; // 첫 번째 트랙을 선택 (subtitles)
+    const button = document.getElementById('toggleSubtitlesBtn');
+    
+    // 자막 상태 토글
+    if (track.mode === 'showing') {
+      track.mode = 'disabled';  // 자막 숨기기
+    } else {
+      track.mode = 'showing';   // 자막 보이기
+    }
+
+    // 버튼 모양 변경
+    if ($(".track span").hasClass("cc_off")) {
+        $(".track span").removeClass("cc_off");
+        $(".track span").addClass("cc_on");
+    } else {
+        $(".track span").removeClass("cc_on");
+        $(".track span").addClass("cc_off");
+    }
+  }
+
 mainVideo.addEventListener(
     "play",
     () => playPauseBtn.classList.replace("img-play", "img-pause")
@@ -259,6 +293,9 @@ $(document).ready(() => {
 
 const setMovie = data => {
     $("#introVideo > source").attr("src", data.AnimationPath);
+
+    // 자막 추가
+    $("#introVideo > track").attr("src", data.AnimationPath.replace(".mp4", ".vtt"));
 
     myVideo.onended = function () {
         // 두번째부터는 자동 시작 안함
