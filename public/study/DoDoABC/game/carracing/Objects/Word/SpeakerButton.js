@@ -18,6 +18,6 @@
   }
 
   static preload(scene) {
-    scene.load.image("speaker", "../carracing/Images/Paint/img_speaker.png");
+    scene.load.image("speaker", "../carracing/images/Paint/img_speaker.png");
   }
 }

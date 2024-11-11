@@ -655,7 +655,7 @@ body,
 /*# sourceMappingURL=style.css.map */
 
 /* 자막 추가 시작 - 2023-07-04 박현기 */
-video::cue {
+/* video::cue {
     background-color: rgba(0, 0, 0, 0);
     color: white;
     text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;
@@ -666,5 +666,33 @@ video::cue {
 
 video::cue(b) {
     color: yellow;
-}
+} */
 /* 자막 추가 끝 - 2023-07-04 박현기 */
+
+video::cue{
+    /* background-color: rgba(0, 0, 0, 0); */
+    background-color: transparent;
+    color:white;
+    text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;;
+    font-family: 'Sandoll Gyeokdonggulim'; 
+    font-size: 72px;
+    /* font-size: 72px; mobile */
+    /* font-size: 5vmin; pc */
+    /* line-height: 150%; pc */
+  }
+
+  video::cue(b) {
+    color:yellow;
+  }
+
+  /* 모바일만 포지션 추가 */
+
+  video::-webkit-media-text-track-container {
+    overflow: visible !important;
+    transform: translateY(-15px) !important;
+  }
+
+  video::-webkit-media-text-track-display-backdrop {        
+    overflow: visible !important;
+    background-clip: text !important;
+  }

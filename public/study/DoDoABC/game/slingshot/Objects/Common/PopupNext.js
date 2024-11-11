@@ -16,8 +16,8 @@ export default class PopupNext extends Phaser.GameObjects.Container {
 
     const popupNext = new Phaser.GameObjects.Sprite(
       scene,
-      398,
-      238,
+      441,
+      241,
       "imgPopupNext"
     ).setOrigin(0);
 

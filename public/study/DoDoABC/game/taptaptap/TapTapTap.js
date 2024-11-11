@@ -42,7 +42,7 @@ const getSynopsis = () => {
           key: "game",
           type: Phaser.AUTO,
           parent: "phaser",
-          background: "#fff",
+          background: "#000",
           width: 1280,
           height: 720,
           physics: {
