@@ -66,27 +66,27 @@
 		return navigator.maxTouchPoints > 0;
 		}
 	
-		let portraitScale = (width - 50) / 1280;
-		let landscapeScale = (height - 50) / 720;
+		let portraitScale = (width * 1.1) / 1280;
+		let landscapeScale = (height * 0.8) / 720;
 	
 		if (window.matchMedia("(orientation: landscape)").matches) {
 		document.querySelector(targetLayout).style.transform =
-			`scale(${isTouchScreen() ?  portraitScale :landscapeScale})`;
+			`scale(${landscapeScale})`;
 		document.querySelector(targetLayoutPopStart).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+			`scale(${landscapeScale}) translate(-50%, -50%)`;
 		document.querySelector(targetLayoutPopLevel).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+			`scale(${landscapeScale}) translate(-50%, -50%)`;
 		document.querySelector(targetLayoutPopResult).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+			`scale(${landscapeScale}) translate(-50%, -50%)`;
 		} else {
 		document.querySelector(targetLayout).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
+			`scale(${portraitScale})`;
 		document.querySelector(targetLayoutPopStart).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+			`scale((${portraitScale}) translate(-50%, -50%)`;
 		document.querySelector(targetLayoutPopLevel).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+			`scale((${portraitScale}) translate(-50%, -50%)`;
 		document.querySelector(targetLayoutPopResult).style.transform =
-			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+			`scale((${portraitScale}) translate(-50%, -50%)`;
 		}
 	}
 	
@@ -95,8 +95,8 @@
 		const width = window.innerWidth;
 		const height = window.innerHeight;  
 	
-		let portraitScale = (width - 50) / 1280;
-		let landscapeScale = (height - 50) / 720;
+		let portraitScale = (width * 1.1) / 1280;
+		let landscapeScale = (height * 0.8) / 720;
 	
 		if (window.matchMedia("(orientation: landscape)").matches) {
 		document.querySelector(targetLayout).style.transform =

@@ -1475,40 +1475,51 @@ function scaleElementPC() {
     return navigator.maxTouchPoints > 0;
   }
 
-  let portraitScale = (width - 10) / 1280;
-  let landscapeScale = (height - 10) / 720;
+  const longLandscapeDivice = () => {
+    if (width - height > 400) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  let portraitScale = width / 1280;
+  let landscapeScale = width / 1280;
+  let landscapeScaleL = (height / 720) * 0.9;
 
   if (window.matchMedia("(orientation: landscape)").matches) {
     document.querySelector(targetLayout).style.transform =
-      `scale(${isTouchScreen() ?  portraitScale :landscapeScale})`;
+      `scale(${longLandscapeDivice() ? landscapeScaleL : landscapeScale}) translate(-50%, -50%)`;
     document.querySelector(correctionItemLayout).style.transform =
-      `scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
-  } else {
+      `scale(${longLandscapeDivice() ? landscapeScaleL : landscapeScale}) translate(-50%, -50%)`;
+  } 
+  if (window.matchMedia("(orientation: portrait)").matches) {
     document.querySelector(targetLayout).style.transform =
-      `scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
+      `scale(${portraitScale}) translate(-50%, -50%)`;
     document.querySelector(correctionItemLayout).style.transform =
-      `scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
+      `scale(${portraitScale}) translate(-50%, -50%)`;
+      
   }
 }
 
 // 모바일 스케일
 function scaleElementMobile() {
   const width = window.innerWidth;
-  const height = window.innerHeight;  
-
-  let portraitScale = (width - 5) / 1280;
-  let landscapeScale = (height - 5) / 720;
+  const height = window.innerHeight;
+    
+  let portraitScale = width / 1280;
+  let landscapeScale = (height / 720) * 0.98;
 
   if (window.matchMedia("(orientation: landscape)").matches) {
     document.querySelector(targetLayout).style.transform =
-      `scale(${landscapeScale})`;
+      `scale(${landscapeScale}) translate(-50%, -50%)`;
     document.querySelector(correctionItemLayout).style.transform =
-      `scale(${landscapeScale})`;
+      `scale(${landscapeScale}) translate(-50%, -50%)`;
   } else {
     document.querySelector(targetLayout).style.transform =
-      `scale(${portraitScale})`;
+      `scale(${portraitScale}) translate(-50%, -50%)`;
     document.querySelector(correctionItemLayout).style.transform =
-      `scale(${portraitScale})`;
+      `scale(${portraitScale}) translate(-50%, -50%)`;
   }
 }
 
@@ -1528,6 +1539,13 @@ function checkMobile() {
 
 window.addEventListener('DOMContentLoaded', checkMobile() ? scaleElementMobile : scaleElementPC);
 window.addEventListener('resize', checkMobile() ? scaleElementMobile : scaleElementPC);
+window.addEventListener('orientationchange', () => {
+  if (window.orientation === 0 || window.orientation === 180) {
+    checkMobile() ? scaleElementMobile : scaleElementPC;
+  } else {
+    checkMobile() ? scaleElementMobile : scaleElementPC;
+  }
+});
 
 // sql 데이터 로딩 [
 const loadQuizData = async (pStep, pQuizType, fnOnSucc) => {

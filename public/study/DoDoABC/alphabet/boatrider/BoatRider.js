@@ -300,10 +300,18 @@ const doCharacterJump = (index, isCorrect) => {
         }, 1500);
     
         if (caseType == "both") {
-            setTimeout(() => {
-                playEffect1(sndCorrectBoing);
-                playSound(sndClinkingCoins, dodomodalFinish);
-            }, 1500);
+            if (isSafari()) {
+                setTimeout(() => {
+                    playEffect1(sndCorrectBoing);
+                    playEffect1(sndClinkingCoins);
+                    dodomodalFinish();
+                }, 1500);
+            } else {
+                setTimeout(() => {
+                    playEffect1(sndCorrectBoing);
+                    playSound(sndClinkingCoins, dodomodalFinish);
+                }, 1500);
+            }
         }
     } 
     if (!isCorrect) {
