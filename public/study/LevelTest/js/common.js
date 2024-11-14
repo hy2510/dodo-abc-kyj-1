@@ -4,131 +4,137 @@
 
 	// 접속 디바이스 구별 함수 (https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js)
 	const md = new MobileDetect(window.navigator.userAgent);
+	const isAndroid = md.os() === 'AndroidOS';
+	const isIos = md.os() === 'iOS' || 'iPadOS';
 
-	// 화면 사이즈를 변경하기 위한 변수
-	let screenWidth = screen.width;
-	let screenHeight = screen.height;
-	let isPortrait = screenHeight > screenWidth;
-	let wrapperScalePortrait =  screenWidth / 1200;
-	let wrapperScaleLandscape = screenHeight / 850;
-	let wrapperScalePortraitToLandscape = screenHeight / 1200; // onload 세로 -> 가로 - 모바일
-	let wrapperScaleLandscapeToPortrait = screenWidth / 850; // onload 가로 -> 세로 - 모바일
-	let wrapperScalePortraitToLandscapeByTab = screenWidth / 1200; // onload 세로 -> 가로 - 태블릿
-	let wrapperScaleLandscapeToPortraitByTab = screenHeight / 1200; // onload 가로 -> 세로 - 태블릿
+	// 웹 브라우저 정보(사용방법 : detectEnvironment(navigator.userAgent))
+	function detectEnvironment(userAgent) {
+		// iOS WebView 감지
+		if (/iPhone|iPad|iPod/.test(userAgent) && !/Safari/.test(userAgent)) {
+		return "iOS WebView";
+		}
+	
+		// Android WebView 감지
+		if (/Android/.test(userAgent) && /wv/.test(userAgent)) {
+		return "Android WebView";
+		}
+	
+		// Chrome 브라우저 감지
+		if (/Chrome/.test(userAgent) && !/Edge|Edg|OPR/.test(userAgent)) {
+		return "Chrome";
+		}
+	
+		// Safari 브라우저 감지
+		if (/Safari/.test(userAgent) && !/Chrome/.test(userAgent)) {
+		return "Safari";
+		}
+	
+		// Firefox 브라우저 감지
+		if (/Firefox/.test(userAgent)) {
+		return "Firefox";
+		}
+	
+		// Edge 브라우저 감지
+		if (/Edg/.test(userAgent)) {
+		return "Edge";
+		}
+	
+		return "Unknown";
+	}
+
+	// 이건 사파리나 iOS 인가?
+	function isSafari() {
+		return detectEnvironment(navigator.userAgent) === 'iOS WebView' || detectEnvironment(navigator.userAgent) === 'Safari';
+	}
+
+	// 터치 장치인지 구별하기
+	function isTouchDevice() {
+		return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+	}
+
 	let targetLayout = "#outline";
 	let targetLayoutPopStart = "#popStart";
 	let targetLayoutPopLevel = "#popLevel";
 	let targetLayoutPopResult = "#popResult";
 
-	// 화면 사이즈 조정 (학습 실행시)
-	function reScale() {
-		if (isMobile) {
-			// 태블릿일 때
-			if (md.tablet()) {
-				if (isPortrait) {
-					$(targetLayout).css('transform', `scale(${wrapperScalePortrait})`);
-					$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-					$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-					$(targetLayoutPopResult).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-				} else {
-					$(targetLayout).css('transform', `scale(${wrapperScalePortrait})`);
-					$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-					$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-					$(targetLayoutPopResult).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-				}
-			}
-		
-			// 모바일일 때
-			else {
-				if (isPortrait) {
-					$(targetLayout).css('transform', `scale(${wrapperScalePortrait})`);
-					$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-					$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-					$(targetLayoutPopResult).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-				} else {
-					$(targetLayout).css('transform', `scale(${wrapperScaleLandscape})`);
-					$(targetLayoutPopStart).css('transform', `scale(${wrapperScaleLandscape}) translate(-50%, -50%)`);
-					$(targetLayoutPopLevel).css('transform', `scale(${wrapperScaleLandscape}) translate(-50%, -50%)`);
-					$(targetLayoutPopResult).css('transform', `scale(${wrapperScaleLandscape}) translate(-50%, -50%)`);
-				}
-			}
+	// PC, 태블릿 스케일
+	function scaleElementPC() {
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+	
+		const isTouchScreen = () => {
+		return navigator.maxTouchPoints > 0;
+		}
+	
+		let portraitScale = (width - 50) / 1280;
+		let landscapeScale = (height - 50) / 720;
+	
+		if (window.matchMedia("(orientation: landscape)").matches) {
+		document.querySelector(targetLayout).style.transform =
+			`scale(${isTouchScreen() ?  portraitScale :landscapeScale})`;
+		document.querySelector(targetLayoutPopStart).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopLevel).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopResult).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
 		} else {
-			if (screenWidth < 1440) {
-				$(targetLayout).css('transform', `scale(${wrapperScalePortrait})`);
-			}
+		document.querySelector(targetLayout).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale})`;
+		document.querySelector(targetLayoutPopStart).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopLevel).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopResult).style.transform =
+			`scale(${isTouchScreen() ? portraitScale :landscapeScale}) translate(-50%, -50%)`;
+		}
+	}
+	
+	// 모바일 스케일
+	function scaleElementMobile() {
+		const width = window.innerWidth;
+		const height = window.innerHeight;  
+	
+		let portraitScale = (width - 50) / 1280;
+		let landscapeScale = (height - 50) / 720;
+	
+		if (window.matchMedia("(orientation: landscape)").matches) {
+		document.querySelector(targetLayout).style.transform =
+			`scale(${landscapeScale})`;
+		document.querySelector(targetLayoutPopStart).style.transform =
+			`scale(${landscapeScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopLevel).style.transform =
+			`scale(${landscapeScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopResult).style.transform =
+			`scale(${landscapeScale}) translate(-50%, -50%)`;
+		} else {
+		document.querySelector(targetLayout).style.transform =
+			`scale(${portraitScale})`;
+		document.querySelector(targetLayoutPopStart).style.transform =
+			`scale(${portraitScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopLevel).style.transform =
+			`scale(${portraitScale}) translate(-50%, -50%)`;
+		document.querySelector(targetLayoutPopResult).style.transform =
+			`scale(${portraitScale}) translate(-50%, -50%)`;
+		}
+	}
+	
+	// 스마트폰 사이즈인지 체크
+	function checkMobile() {
+		if (!md.is('iPhone')) {
+		if (window.matchMedia("(orientation: landscape)").matches) {
+			return screen.height < 600
+		} 
+		if (window.matchMedia("(orientation: portrait)").matches) {
+			return screen.width < 600
+		}
+		} else {
+		return true;
 		}
 	}
 
-	// 화면 사이즈 조정 (디바이스 회전시)
-	function orientationchangeReScale() {
-		if (isMobile) {
-			// 태블릿일 때
-			if (md.tablet()) {
-				switch(window.orientation) {
-					// onload 세로 -> 가로
-					case 0:
-						if (isPortrait) {
-							$(targetLayout).css('transform', `scale(${wrapperScalePortraitToLandscapeByTab})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortraitToLandscapeByTab}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortraitToLandscapeByTab}) translate(-50%, -50%)`);
-						} else {
-							$(targetLayout).css('transform', `scale(${wrapperScaleLandscapeToPortraitByTab})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScaleLandscapeToPortraitByTab}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScaleLandscapeToPortraitByTab}) translate(-50%, -50%)`);
-						}
-						break;
-					// onload 가로 -> 세로
-					case 90:
-					case -90:
-						if (isPortrait) {
-							$(targetLayout).css('transform', `scale(${wrapperScaleLandscapeToPortraitByTab})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScaleLandscapeToPortraitByTab}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScaleLandscapeToPortraitByTab}) translate(-50%, -50%)`);
-						} else {
-							$(targetLayout).css('transform', `scale(${wrapperScalePortrait})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-						}
-						break;
-				}
-			}
-			// 모바일일 때
-			else {
-				switch(window.orientation) {
-					// onload 세로 -> 가로
-					case 0:
-						if (isPortrait) {
-							$(targetLayout).css('transform', `scale(${wrapperScalePortrait})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortrait}) translate(-50%, -50%)`);
-						} else {
-							$(targetLayout).css('transform', `scale(${wrapperScalePortraitToLandscape})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScalePortraitToLandscape}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScalePortraitToLandscape}) translate(-50%, -50%)`);
-						}
-						break;
-					// onload 가로 -> 세로
-					case 90:
-					case -90:
-						if (isPortrait) {
-							$(targetLayout).css('transform', `scale(${wrapperScaleLandscapeToPortrait})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScaleLandscapeToPortrait}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScaleLandscapeToPortrait}) translate(-50%, -50%)`);
-						} else {
-							$(targetLayout).css('transform', `scale(${wrapperScaleLandscape})`);
-							$(targetLayoutPopStart).css('transform', `scale(${wrapperScaleLandscape}) translate(-50%, -50%)`);
-							$(targetLayoutPopLevel).css('transform', `scale(${wrapperScaleLandscape}) translate(-50%, -50%)`);
-						}
-						break;
-				}
-			}
-		}
-	}
-
-	// 화면 실행
-	$(window).on("orientationchange", function(){
-		orientationchangeReScale();
-	});
+	window.addEventListener('DOMContentLoaded', checkMobile() ? scaleElementMobile : scaleElementPC);
+	window.addEventListener('resize', checkMobile() ? scaleElementMobile : scaleElementPC);
 
 	doStart();
 

@@ -273,5 +273,6 @@ const resetAll = (pStart) => {
 }
 
 const playQuestion = () => {
-    playEffect1(quizData.Sound1);
+    // playEffect1(quizData.Sound1);
+    playSound(quizData.Sound1, function () { isClick = false; isWorking = false; lockScreen(false); });
 }

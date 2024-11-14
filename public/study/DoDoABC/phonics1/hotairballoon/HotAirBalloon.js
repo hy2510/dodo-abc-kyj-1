@@ -350,7 +350,10 @@ const playClick = (pData, idx) => {
 }
 
 const playWord = () => {
-    playPronunce();
+    // playPronunce();
+    playSound(pronuncePhonics + quizData.Question + ".mp3", function () {
+        isWorking = false; isClick = false; lockScreen(false);
+    });
 }
 
 const playPronunce = () => {

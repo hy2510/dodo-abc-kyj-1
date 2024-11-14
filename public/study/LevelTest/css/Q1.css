@@ -18,7 +18,7 @@ body {
     position:relative;
 }
 
-#boxMain {width:1012px;height:770px;position:absolute;left:94px;top:31px;}
+#boxMain {width:1012px;height:770px;position:absolute;left:94px;top:31px;padding-top: 15px;}
 #boxMain .bg .a{display:block;}
 #boxMain .bg .b{display:none;}
 #boxMain .bg.b .a{display:none;}
@@ -79,17 +79,35 @@ body {
 
 #boxMain .box-btm{position:absolute;bottom:0px;right:20px;}
 
-#popStart{width:647px;height:430px;}
+#popStart{
+    width:647px;
+    height:430px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
 #popStart .logo{position:absolute;top:40px;left:40px;}
 #popStart .title{position:absolute;top:74px;left:200px;}
 #popStart .guide{position:absolute;bottom:60px;left:90px;font-family:'kor';font-size:0.875em;color:red;}
 #popStart .bt{position:absolute;bottom:90px;right:80px;}
 
-#popLevel{width:647px;height:430px;}
+#popLevel{
+    width:647px;
+    height:430px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
 #popLevel .guide{position:absolute;bottom:60px;left:90px;font-family:'kor';font-size:0.875em;color:red;}
 #popLevel .bt{position:absolute;bottom:90px;right:80px;}
 
-#popResult {width:936px;height:520px;}
+#popResult {
+    width:936px;
+    height:520px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
 #popResult .box-msg{position:absolute;top:0px;left:254px;width:438px;height:284px;}
 #popResult .box-msg>.bg{position:absolute;z-index:0;}
 #popResult .box-msg .msg{position:absolute;top:70px;left:0px;width:96%;font-size:2em;color:#333;text-align:center;z-index:1;}

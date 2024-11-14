@@ -9,6 +9,7 @@ body{background:#D7F0FF;}
 
 #outline{width:1200px;height:800px;margin:0 auto;position:relative;}
 
+#boxMain {padding-top: 15px;}
 #boxMain .timer{position:absolute;top:-45px;right:60px;width:40px;height:40px;border-radius:22px;background:#d4d4d4;z-index:10;}
 #boxMain .timer .tx{position:absolute;top:10px;left:0px;width:100%;font-size:16px;text-align:center;}
 
@@ -199,7 +200,13 @@ body{background:#D7F0FF;}
 
 #boxMain .box-btm{position:absolute;bottom:0px;right:20px;}
 
-#popStart{width:647px;height:430px;}
+#popStart{
+    width:647px;
+    height:430px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
 #popStart .title{position:absolute;top:34px;left:90px;width:400px;text-align:center;}
 #popStart .title img{margin:0 auto;}
 #popStart .title.qzset1 { }
@@ -214,7 +221,13 @@ body{background:#D7F0FF;}
 #popStart .title.qzset3 .qzset3{display:block;}
 #popStart .bt{position:absolute;bottom:120px;left:215px;}
 
-#popResult {width:936px;height:637px;}
+#popResult {
+    width:936px;
+    height:637px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
 #popResult .box-msg{position:absolute;top:0px;left:184px;width:609px;height:378px;}
 #popResult .box-msg>.bg{position:absolute;z-index:0;}
 #popResult .box-msg .msg{position:absolute;top:80px;left:120px;width:300px;text-align:center;}
